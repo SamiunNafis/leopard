@@ -35,6 +35,8 @@ import android.system.OsConstants;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+import android.app.NotificationChannel;
+import android.graphics.Color;
 
 import com.zerox.vpn.BuildConfig;
 import com.zerox.vpn.HomeActivity;
@@ -186,6 +188,16 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     }
 
     private void showNotification(final String msg, String tickerText, @NonNull String channel, long when, ConnectionStatus status) {
+    
+        NotificationManager cman = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        CharSequence name = channel;
+        NotificationChannel mChannel = new NotificationChannel(channel, name, NotificationManager.IMPORTANCE_MIN);
+        mChannel.setDescription("desc");
+        mChannel.enableLights(false);
+        mChannel.setLightColor(Color.DKGRAY);
+        cman.createNotificationChannel(mChannel);
+        
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int icon = getIconByConnectionStatus(status);
         android.app.Notification.Builder nbuilder = new Notification.Builder(this);
@@ -205,15 +217,15 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         else nbuilder.setContentIntent(getGraphPendingIntent());
         if (when != 0) nbuilder.setWhen(when);
         // Try to set the priority available since API 16 (Jellybean)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) jbNotificationExtras(priority, nbuilder);
+      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) jbNotificationExtras(priority, nbuilder);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) lpNotificationExtras(nbuilder);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //noinspection NewApi
+          */  //noinspection NewApi
             nbuilder.setChannelId(channel);
             if (mProfile != null)
                 //noinspection NewApi
                 nbuilder.setShortcutId(mProfile.getUUIDString());
-        }
+        
         if (tickerText != null && !tickerText.equals("")) nbuilder.setTicker(tickerText);
         @SuppressWarnings("deprecation") Notification notification = nbuilder.getNotification();
         int notificationId = channel.hashCode();
