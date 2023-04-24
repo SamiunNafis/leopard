@@ -26,9 +26,9 @@ public class ProxyDetection {
                 return addr;
             }
         } catch (MalformedURLException e) {
-            VpnStatus.logError(R.string.getproxyerror, e.getLocalizedMessage());
+            VpnStatus.logError(R.string.getproxy_error, e.getLocalizedMessage());
         } catch (URISyntaxException e) {
-            VpnStatus.logError(R.string.getproxyerror, e.getLocalizedMessage());
+            VpnStatus.logError(R.string.getproxy_error, e.getLocalizedMessage());
         }
         return null;
     }

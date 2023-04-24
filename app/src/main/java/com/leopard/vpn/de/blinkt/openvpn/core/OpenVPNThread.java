@@ -24,14 +24,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OpenVPNThread implements Runnable {
-    public static final int MFATAL = (1 << 4);
-    public static final int MNONFATAL = (1 << 5);
-    public static final int MWARN = (1 << 6);
-    public static final int MDEBUG = (1 << 7);
-    private static final String DUMPPATHSTRING = "Dump path: ";
+    public static final int M_FATAL = (1 << 4);
+    public static final int M_NONFATAL = (1 << 5);
+    public static final int M_WARN = (1 << 6);
+    public static final int M_DEBUG = (1 << 7);
+    private static final String DUMP_PATH_STRING = "Dump path: ";
     @SuppressLint("SdCardPath")
-    private static final String BROKENPIESUPPORT = "/data/data/com.leopard.vpn/cache/pievpn";
-    private final static String BROKENPIESUPPORT2 = "syntax error";
+    private static final String BROKEN_PIE_SUPPORT = "/data/data/com.leopard.vpn/cache/pievpn";
+    private final static String BROKEN_PIE_SUPPORT2 = "syntax error";
     private static final String TAG = "OpenVPN";
     private String[] mArgv;
     private Process mProcess;
@@ -87,7 +87,7 @@ public class OpenVPNThread implements Runnable {
                 }
             }
             if (!mNoProcessExitStatus) {
-                VpnStatus.updateStateString("NOPROCESS", "No process running.", R.string.statenoprocess, ConnectionStatus.LEVELNOTCONNECTED);
+                VpnStatus.updateStateString("NOPROCESS", "No process running.", R.string.state_noprocess, ConnectionStatus.LEVEL_NOTCONNECTED);
             }
             if (mDumpPath != null) {
                 try {
@@ -98,7 +98,7 @@ public class OpenVPNThread implements Runnable {
                         logout.write(time + " " + li.getString(mService) + "\n");
                     }
                     logout.close();
-                    VpnStatus.logError(R.string.minidumpgenerated);
+                    VpnStatus.logError(R.string.minidump_generated);
                 } catch (IOException e) {
                     VpnStatus.logError("Writing minidump log: " + e.getLocalizedMessage());
                 }
@@ -114,7 +114,7 @@ public class OpenVPNThread implements Runnable {
         ProcessBuilder pb = new ProcessBuilder(argvlist);
         // Hack O rama
         String lbpath = genLibraryPath(argv, pb);
-        pb.environment().put("LDLIBRARYPATH", lbpath);
+        pb.environment().put("LD_LIBRARY_PATH", lbpath);
         pb.redirectErrorStream(true);
         try {
             mProcess = pb.start();
@@ -127,10 +127,10 @@ public class OpenVPNThread implements Runnable {
                 if (logline == null) {
                     return;
                 }
-                if (logline.startsWith(DUMPPATHSTRING)) {
-                    mDumpPath = logline.substring(DUMPPATHSTRING.length());
+                if (logline.startsWith(DUMP_PATH_STRING)) {
+                    mDumpPath = logline.substring(DUMP_PATH_STRING.length());
                 }
-                if (logline.startsWith(BROKENPIESUPPORT) || logline.contains(BROKENPIESUPPORT2)) {
+                if (logline.startsWith(BROKEN_PIE_SUPPORT) || logline.contains(BROKEN_PIE_SUPPORT2)) {
                     mBrokenPie = true;
                 }
                 // 1380308330.240114 18000002 Send to HTTP proxy: 'X-Online-Host: bla.blabla.com'
@@ -142,13 +142,13 @@ public class OpenVPNThread implements Runnable {
                     String msg = m.group(4);
                     int logLevel = flags & 0x0F;
                     VpnStatus.LogLevel logStatus = VpnStatus.LogLevel.INFO;
-                    if ((flags & MFATAL) != 0) {
+                    if ((flags & M_FATAL) != 0) {
                         logStatus = VpnStatus.LogLevel.ERROR;
-                    } else if ((flags & MNONFATAL) != 0) {
+                    } else if ((flags & M_NONFATAL) != 0) {
                         logStatus = VpnStatus.LogLevel.WARNING;
-                    } else if ((flags & MWARN) != 0) {
+                    } else if ((flags & M_WARN) != 0) {
                         logStatus = VpnStatus.LogLevel.WARNING;
-                    } else if ((flags & MDEBUG) != 0) {
+                    } else if ((flags & M_DEBUG) != 0) {
                         logStatus = VpnStatus.LogLevel.VERBOSE;
                     }
                     if (msg.startsWith("MANAGEMENT: CMD")) {
@@ -177,7 +177,7 @@ public class OpenVPNThread implements Runnable {
     private String genLibraryPath(String[] argv, ProcessBuilder pb) {
         // Hack until I find a good way to get the real library path
         String applibpath = argv[0].replaceFirst("/cache/.*$", "/lib");
-        String lbpath = pb.environment().get("LDLIBRARYPATH");
+        String lbpath = pb.environment().get("LD_LIBRARY_PATH");
         if (lbpath == null) lbpath = applibpath;
         else lbpath = applibpath + ":" + lbpath;
         if (!applibpath.equals(mNativeDir)) {

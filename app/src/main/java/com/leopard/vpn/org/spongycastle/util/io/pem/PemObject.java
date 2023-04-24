@@ -10,7 +10,7 @@ import java.util.List;
 
 @SuppressWarnings("all")
 public class PemObject implements PemObjectGenerator {
-    private static final List EMPTYLIST = Collections.unmodifiableList(new ArrayList());
+    private static final List EMPTY_LIST = Collections.unmodifiableList(new ArrayList());
     private String type;
     private List headers;
     private byte[] content;
@@ -22,7 +22,7 @@ public class PemObject implements PemObjectGenerator {
      * @param content the binary content of the object.
      */
     public PemObject(String type, byte[] content) {
-        this(type, EMPTYLIST, content);
+        this(type, EMPTY_LIST, content);
     }
 
     /**

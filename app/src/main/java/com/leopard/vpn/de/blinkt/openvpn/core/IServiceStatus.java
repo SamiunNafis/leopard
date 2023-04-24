@@ -38,65 +38,65 @@ return this;
 java.lang.String descriptor = DESCRIPTOR;
 switch (code)
 {
-case INTERFACETRANSACTION:
+case INTERFACE_TRANSACTION:
 {
 reply.writeString(descriptor);
 return true;
 }
-case TRANSACTIONregisterStatusCallback:
+case TRANSACTION_registerStatusCallback:
 {
 data.enforceInterface(descriptor);
-de.blinkt.openvpn.core.IStatusCallbacks arg0;
-arg0 = de.blinkt.openvpn.core.IStatusCallbacks.Stub.asInterface(data.readStrongBinder());
-android.os.ParcelFileDescriptor result = this.registerStatusCallback(arg0);
+de.blinkt.openvpn.core.IStatusCallbacks _arg0;
+_arg0 = de.blinkt.openvpn.core.IStatusCallbacks.Stub.asInterface(data.readStrongBinder());
+android.os.ParcelFileDescriptor _result = this.registerStatusCallback(_arg0);
 reply.writeNoException();
-if ((result!=null)) {
+if ((_result!=null)) {
 reply.writeInt(1);
-result.writeToParcel(reply, android.os.Parcelable.PARCELABLEWRITERETURNVALUE);
+_result.writeToParcel(reply, android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
 }
 else {
 reply.writeInt(0);
 }
 return true;
 }
-case TRANSACTIONunregisterStatusCallback:
+case TRANSACTION_unregisterStatusCallback:
 {
 data.enforceInterface(descriptor);
-de.blinkt.openvpn.core.IStatusCallbacks arg0;
-arg0 = de.blinkt.openvpn.core.IStatusCallbacks.Stub.asInterface(data.readStrongBinder());
-this.unregisterStatusCallback(arg0);
+de.blinkt.openvpn.core.IStatusCallbacks _arg0;
+_arg0 = de.blinkt.openvpn.core.IStatusCallbacks.Stub.asInterface(data.readStrongBinder());
+this.unregisterStatusCallback(_arg0);
 reply.writeNoException();
 return true;
 }
-case TRANSACTIONgetLastConnectedVPN:
+case TRANSACTION_getLastConnectedVPN:
 {
 data.enforceInterface(descriptor);
-java.lang.String result = this.getLastConnectedVPN();
+java.lang.String _result = this.getLastConnectedVPN();
 reply.writeNoException();
-reply.writeString(result);
+reply.writeString(_result);
 return true;
 }
-case TRANSACTIONsetCachedPassword:
+case TRANSACTION_setCachedPassword:
 {
 data.enforceInterface(descriptor);
-java.lang.String arg0;
-arg0 = data.readString();
-int arg1;
-arg1 = data.readInt();
-java.lang.String arg2;
-arg2 = data.readString();
-this.setCachedPassword(arg0, arg1, arg2);
+java.lang.String _arg0;
+_arg0 = data.readString();
+int _arg1;
+_arg1 = data.readInt();
+java.lang.String _arg2;
+_arg2 = data.readString();
+this.setCachedPassword(_arg0, _arg1, _arg2);
 reply.writeNoException();
 return true;
 }
-case TRANSACTIONgetTrafficHistory:
+case TRANSACTION_getTrafficHistory:
 {
 data.enforceInterface(descriptor);
-de.blinkt.openvpn.core.TrafficHistory result = this.getTrafficHistory();
+de.blinkt.openvpn.core.TrafficHistory _result = this.getTrafficHistory();
 reply.writeNoException();
-if ((result!=null)) {
+if ((_result!=null)) {
 reply.writeInt(1);
-result.writeToParcel(reply, android.os.Parcelable.PARCELABLEWRITERETURNVALUE);
+_result.writeToParcel(reply, android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
 }
 else {
 reply.writeInt(0);
@@ -130,80 +130,80 @@ return DESCRIPTOR;
           */
 @Override public android.os.ParcelFileDescriptor registerStatusCallback(de.blinkt.openvpn.core.IStatusCallbacks cb) throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
-android.os.Parcel reply = android.os.Parcel.obtain();
-android.os.ParcelFileDescriptor result;
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+android.os.ParcelFileDescriptor _result;
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-data.writeStrongBinder((((cb!=null))?(cb.asBinder()):(null)));
-mRemote.transact(Stub.TRANSACTIONregisterStatusCallback, data, reply, 0);
-reply.readException();
-if ((0!=reply.readInt())) {
-result = android.os.ParcelFileDescriptor.CREATOR.createFromParcel(reply);
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeStrongBinder((((cb!=null))?(cb.asBinder()):(null)));
+mRemote.transact(Stub.TRANSACTION_registerStatusCallback, _data, _reply, 0);
+_reply.readException();
+if ((0!=_reply.readInt())) {
+_result = android.os.ParcelFileDescriptor.CREATOR.createFromParcel(_reply);
 }
 else {
-result = null;
+_result = null;
 }
 }
 finally {
-reply.recycle();
-data.recycle();
+_reply.recycle();
+_data.recycle();
 }
-return result;
+return _result;
 }
 /**
            * Remove a previously registered callback interface.
            */
 @Override public void unregisterStatusCallback(de.blinkt.openvpn.core.IStatusCallbacks cb) throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
-android.os.Parcel reply = android.os.Parcel.obtain();
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-data.writeStrongBinder((((cb!=null))?(cb.asBinder()):(null)));
-mRemote.transact(Stub.TRANSACTIONunregisterStatusCallback, data, reply, 0);
-reply.readException();
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeStrongBinder((((cb!=null))?(cb.asBinder()):(null)));
+mRemote.transact(Stub.TRANSACTION_unregisterStatusCallback, _data, _reply, 0);
+_reply.readException();
 }
 finally {
-reply.recycle();
-data.recycle();
+_reply.recycle();
+_data.recycle();
 }
 }
 @Override public java.lang.String getLastConnectedVPN() throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
-android.os.Parcel reply = android.os.Parcel.obtain();
-java.lang.String result;
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+java.lang.String _result;
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-mRemote.transact(Stub.TRANSACTIONgetLastConnectedVPN, data, reply, 0);
-reply.readException();
-result = reply.readString();
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_getLastConnectedVPN, _data, _reply, 0);
+_reply.readException();
+_result = _reply.readString();
 }
 finally {
-reply.recycle();
-data.recycle();
+_reply.recycle();
+_data.recycle();
 }
-return result;
+return _result;
 }
 /**
           * Sets a cached password
           */
 @Override public void setCachedPassword(java.lang.String uuid, int type, java.lang.String password) throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
-android.os.Parcel reply = android.os.Parcel.obtain();
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-data.writeString(uuid);
-data.writeInt(type);
-data.writeString(password);
-mRemote.transact(Stub.TRANSACTIONsetCachedPassword, data, reply, 0);
-reply.readException();
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(uuid);
+_data.writeInt(type);
+_data.writeString(password);
+mRemote.transact(Stub.TRANSACTION_setCachedPassword, _data, _reply, 0);
+_reply.readException();
 }
 finally {
-reply.recycle();
-data.recycle();
+_reply.recycle();
+_data.recycle();
 }
 }
 /**
@@ -211,32 +211,32 @@ data.recycle();
        */
 @Override public de.blinkt.openvpn.core.TrafficHistory getTrafficHistory() throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
-android.os.Parcel reply = android.os.Parcel.obtain();
-de.blinkt.openvpn.core.TrafficHistory result;
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+de.blinkt.openvpn.core.TrafficHistory _result;
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-mRemote.transact(Stub.TRANSACTIONgetTrafficHistory, data, reply, 0);
-reply.readException();
-if ((0!=reply.readInt())) {
-result = de.blinkt.openvpn.core.TrafficHistory.CREATOR.createFromParcel(reply);
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_getTrafficHistory, _data, _reply, 0);
+_reply.readException();
+if ((0!=_reply.readInt())) {
+_result = de.blinkt.openvpn.core.TrafficHistory.CREATOR.createFromParcel(_reply);
 }
 else {
-result = null;
+_result = null;
 }
 }
 finally {
-reply.recycle();
-data.recycle();
+_reply.recycle();
+_data.recycle();
 }
-return result;
+return _result;
 }
 }
-static final int TRANSACTIONregisterStatusCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
-static final int TRANSACTIONunregisterStatusCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
-static final int TRANSACTIONgetLastConnectedVPN = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
-static final int TRANSACTIONsetCachedPassword = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
-static final int TRANSACTIONgetTrafficHistory = (android.os.IBinder.FIRST_CALL_TRANSACTION + 4);
+static final int TRANSACTION_registerStatusCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+static final int TRANSACTION_unregisterStatusCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+static final int TRANSACTION_getLastConnectedVPN = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+static final int TRANSACTION_setCachedPassword = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+static final int TRANSACTION_getTrafficHistory = (android.os.IBinder.FIRST_CALL_TRANSACTION + 4);
 }
 /**
           * Registers to receive OpenVPN Status Updates and gets a

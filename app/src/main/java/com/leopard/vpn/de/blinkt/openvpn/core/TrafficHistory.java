@@ -13,9 +13,9 @@ import static java.lang.Math.max;
  * Created by arne on 23.05.17.
  */
 public class TrafficHistory implements Parcelable {
-    public static final long PERIODSTOKEEP = 5;
-    public static final int TIMEPERIODMINTUES = 60 * 1000;
-    public static final int TIMEPERIODHOURS = 3600 * 1000;
+    public static final long PERIODS_TO_KEEP = 5;
+    public static final int TIME_PERIOD_MINTUES = 60 * 1000;
+    public static final int TIME_PERIOD_HOURS = 3600 * 1000;
     public static final Creator<TrafficHistory> CREATOR = new Creator<TrafficHistory>() {
         @Override
         public TrafficHistory createFromParcel(Parcel in) {
@@ -104,12 +104,12 @@ public class TrafficHistory implements Parcelable {
         LinkedList<TrafficDatapoint> tpList, nextList;
         TrafficDatapoint lastTsPeriod;
         if (seconds) {
-            timePeriod = TIMEPERIODMINTUES;
+            timePeriod = TIME_PERIOD_MINTUES;
             tpList = trafficHistorySeconds;
             nextList = trafficHistoryMinutes;
             lastTsPeriod = lastSecondUsedForMinute;
         } else {
-            timePeriod = TIMEPERIODHOURS;
+            timePeriod = TIME_PERIOD_HOURS;
             tpList = trafficHistoryMinutes;
             nextList = trafficHistoryHours;
             lastTsPeriod = lastMinuteUsedForHours;
@@ -123,7 +123,7 @@ public class TrafficHistory implements Parcelable {
                 lastMinuteUsedForHours = newTdp;
             for (TrafficDatapoint tph : tpList) {
                 // List is iteratered from oldest to newest, remembert first one that we did not
-                if ((newTdp.timestamp - tph.timestamp) / timePeriod >= PERIODSTOKEEP)
+                if ((newTdp.timestamp - tph.timestamp) / timePeriod >= PERIODS_TO_KEEP)
                     toRemove.add(tph);
             }
             tpList.removeAll(toRemove);

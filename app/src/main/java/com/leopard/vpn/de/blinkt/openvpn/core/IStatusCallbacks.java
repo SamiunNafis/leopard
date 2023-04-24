@@ -38,59 +38,59 @@ return this;
 java.lang.String descriptor = DESCRIPTOR;
 switch (code)
 {
-case INTERFACETRANSACTION:
+case INTERFACE_TRANSACTION:
 {
 reply.writeString(descriptor);
 return true;
 }
-case TRANSACTIONnewLogItem:
+case TRANSACTION_newLogItem:
 {
 data.enforceInterface(descriptor);
-de.blinkt.openvpn.core.LogItem arg0;
+de.blinkt.openvpn.core.LogItem _arg0;
 if ((0!=data.readInt())) {
-arg0 = de.blinkt.openvpn.core.LogItem.CREATOR.createFromParcel(data);
+_arg0 = de.blinkt.openvpn.core.LogItem.CREATOR.createFromParcel(data);
 }
 else {
-arg0 = null;
+_arg0 = null;
 }
-this.newLogItem(arg0);
+this.newLogItem(_arg0);
 return true;
 }
-case TRANSACTIONupdateStateString:
+case TRANSACTION_updateStateString:
 {
 data.enforceInterface(descriptor);
-java.lang.String arg0;
-arg0 = data.readString();
-java.lang.String arg1;
-arg1 = data.readString();
-int arg2;
-arg2 = data.readInt();
-de.blinkt.openvpn.core.ConnectionStatus arg3;
+java.lang.String _arg0;
+_arg0 = data.readString();
+java.lang.String _arg1;
+_arg1 = data.readString();
+int _arg2;
+_arg2 = data.readInt();
+de.blinkt.openvpn.core.ConnectionStatus _arg3;
 if ((0!=data.readInt())) {
-arg3 = de.blinkt.openvpn.core.ConnectionStatus.CREATOR.createFromParcel(data);
+_arg3 = de.blinkt.openvpn.core.ConnectionStatus.CREATOR.createFromParcel(data);
 }
 else {
-arg3 = null;
+_arg3 = null;
 }
-this.updateStateString(arg0, arg1, arg2, arg3);
+this.updateStateString(_arg0, _arg1, _arg2, _arg3);
 return true;
 }
-case TRANSACTIONupdateByteCount:
+case TRANSACTION_updateByteCount:
 {
 data.enforceInterface(descriptor);
-long arg0;
-arg0 = data.readLong();
-long arg1;
-arg1 = data.readLong();
-this.updateByteCount(arg0, arg1);
+long _arg0;
+_arg0 = data.readLong();
+long _arg1;
+_arg1 = data.readLong();
+this.updateByteCount(_arg0, _arg1);
 return true;
 }
-case TRANSACTIONconnectedVPN:
+case TRANSACTION_connectedVPN:
 {
 data.enforceInterface(descriptor);
-java.lang.String arg0;
-arg0 = data.readString();
-this.connectedVPN(arg0);
+java.lang.String _arg0;
+_arg0 = data.readString();
+this.connectedVPN(_arg0);
 return true;
 }
 default:
@@ -119,73 +119,73 @@ return DESCRIPTOR;
      */
 @Override public void newLogItem(de.blinkt.openvpn.core.LogItem item) throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
+android.os.Parcel _data = android.os.Parcel.obtain();
 try {
-data.writeInterfaceToken(DESCRIPTOR);
+_data.writeInterfaceToken(DESCRIPTOR);
 if ((item!=null)) {
-data.writeInt(1);
-item.writeToParcel(data, 0);
+_data.writeInt(1);
+item.writeToParcel(_data, 0);
 }
 else {
-data.writeInt(0);
+_data.writeInt(0);
 }
-mRemote.transact(Stub.TRANSACTIONnewLogItem, data, null, android.os.IBinder.FLAGONEWAY);
+mRemote.transact(Stub.TRANSACTION_newLogItem, _data, null, android.os.IBinder.FLAG_ONEWAY);
 }
 finally {
-data.recycle();
+_data.recycle();
 }
 }
 @Override public void updateStateString(java.lang.String state, java.lang.String msg, int resid, de.blinkt.openvpn.core.ConnectionStatus level) throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
+android.os.Parcel _data = android.os.Parcel.obtain();
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-data.writeString(state);
-data.writeString(msg);
-data.writeInt(resid);
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(state);
+_data.writeString(msg);
+_data.writeInt(resid);
 if ((level!=null)) {
-data.writeInt(1);
-level.writeToParcel(data, 0);
+_data.writeInt(1);
+level.writeToParcel(_data, 0);
 }
 else {
-data.writeInt(0);
+_data.writeInt(0);
 }
-mRemote.transact(Stub.TRANSACTIONupdateStateString, data, null, android.os.IBinder.FLAGONEWAY);
+mRemote.transact(Stub.TRANSACTION_updateStateString, _data, null, android.os.IBinder.FLAG_ONEWAY);
 }
 finally {
-data.recycle();
+_data.recycle();
 }
 }
 @Override public void updateByteCount(long inBytes, long outBytes) throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
+android.os.Parcel _data = android.os.Parcel.obtain();
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-data.writeLong(inBytes);
-data.writeLong(outBytes);
-mRemote.transact(Stub.TRANSACTIONupdateByteCount, data, null, android.os.IBinder.FLAGONEWAY);
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeLong(inBytes);
+_data.writeLong(outBytes);
+mRemote.transact(Stub.TRANSACTION_updateByteCount, _data, null, android.os.IBinder.FLAG_ONEWAY);
 }
 finally {
-data.recycle();
+_data.recycle();
 }
 }
 @Override public void connectedVPN(java.lang.String uuid) throws android.os.RemoteException
 {
-android.os.Parcel data = android.os.Parcel.obtain();
+android.os.Parcel _data = android.os.Parcel.obtain();
 try {
-data.writeInterfaceToken(DESCRIPTOR);
-data.writeString(uuid);
-mRemote.transact(Stub.TRANSACTIONconnectedVPN, data, null, android.os.IBinder.FLAGONEWAY);
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(uuid);
+mRemote.transact(Stub.TRANSACTION_connectedVPN, _data, null, android.os.IBinder.FLAG_ONEWAY);
 }
 finally {
-data.recycle();
+_data.recycle();
 }
 }
 }
-static final int TRANSACTIONnewLogItem = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
-static final int TRANSACTIONupdateStateString = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
-static final int TRANSACTIONupdateByteCount = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
-static final int TRANSACTIONconnectedVPN = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+static final int TRANSACTION_newLogItem = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+static final int TRANSACTION_updateStateString = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+static final int TRANSACTION_updateByteCount = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+static final int TRANSACTION_connectedVPN = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
 }
 /**
      * Called when the service has a new status for you.

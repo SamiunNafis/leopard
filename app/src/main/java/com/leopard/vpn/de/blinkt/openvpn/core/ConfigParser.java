@@ -20,7 +20,7 @@ import de.blinkt.openvpn.VpnProfile;
 // bar
 // </foo>
 public class ConfigParser {
-    public static final String CONVERTEDPROFILE = "converted Profile";
+    public static final String CONVERTED_PROFILE = "converted Profile";
     final String[] unsupportedOptions = {"config",
             "tls-server"
     };
@@ -79,10 +79,10 @@ public class ConfigParser {
     };
     final String[][] ignoreOptionsWithArg =
             {
-                    {"setenv", "IVGUIVER"},
-                    {"setenv", "IVOPENVPNGUIVERSION"},
+                    {"setenv", "IV_GUI_VER"},
+                    {"setenv", "IV_OPENVPN_GUI_VERSION"},
                     {"engine", "dynamic"},
-                    {"setenv", "CLIENTCERT"}
+                    {"setenv", "CLIENT_CERT"}
             };
     final String[] connectionOptions = {
             "local",
@@ -112,7 +112,7 @@ public class ConfigParser {
     };
     private HashMap<String, Vector<Vector<String>>> options = new HashMap<String, Vector<Vector<String>>>();
     private HashMap<String, Vector<String>> meta = new HashMap<String, Vector<String>>();
-    private String authuserpassfile;
+    private String auth_user_pass_file;
     static public void useEmbbedUserAuth(VpnProfile np, String inlinedata) {
         String data = VpnProfile.getEmbeddedContent(inlinedata);
         String[] parts = data.split("\n");
@@ -142,7 +142,7 @@ public class ConfigParser {
                     }
                 }
                 // Check for OpenVPN Access Server Meta information
-                if (line.startsWith("# OVPNACCESSSERVER")) {
+                if (line.startsWith("# OVPN_ACCESS_SERVER_")) {
                     Vector<String> metaarg = parsemeta(line);
                     meta.put(metaarg.get(0), metaarg);
                     continue;
@@ -166,7 +166,7 @@ public class ConfigParser {
         }
     }
     private Vector<String> parsemeta(String line) {
-        String meta = line.split("#\\sOVPNACCESSSERVER", 2)[1];
+        String meta = line.split("#\\sOVPN_ACCESS_SERVER_", 2)[1];
         String[] parts = meta.split("=", 2);
         Vector<String> rval = new Vector<String>();
         Collections.addAll(rval, parts);
@@ -177,7 +177,7 @@ public class ConfigParser {
         // CHeck for <foo>
         if (arg0.startsWith("<") && arg0.endsWith(">")) {
             String argname = arg0.substring(1, arg0.length() - 1);
-            String inlinefile = VpnProfile.INLINETAG;
+            String inlinefile = VpnProfile.INLINE_TAG;
             String endtag = String.format("</%s>", argname);
             do {
                 String line = br.readLine();
@@ -199,7 +199,7 @@ public class ConfigParser {
         }
     }
     public String getAuthUserPassFile() {
-        return authuserpassfile;
+        return auth_user_pass_file;
     }
     private boolean space(char c) {
         // I really hope nobody is using zero bytes inside his/her config file
@@ -223,7 +223,7 @@ public class ConfigParser {
                 in = line.charAt(pos);
             else
                 in = '\0';
-            if (!backslash && in == '\\' && state != linestate.readinsinglequote) {
+            if (!backslash && in == '\\' && state != linestate.readin_single_quote) {
                 backslash = true;
             } else {
                 if (state == linestate.initial) {
@@ -231,32 +231,32 @@ public class ConfigParser {
                         if (in == ';' || in == '#') /* comment */
                             break;
                         if (!backslash && in == '\"')
-                            state = linestate.readingquoted;
+                            state = linestate.reading_quoted;
                         else if (!backslash && in == '\'')
-                            state = linestate.readinsinglequote;
+                            state = linestate.readin_single_quote;
                         else {
                             out = in;
-                            state = linestate.readingunquoted;
+                            state = linestate.reading_unquoted;
                         }
                     }
-                } else if (state == linestate.readingunquoted) {
+                } else if (state == linestate.reading_unquoted) {
                     if (!backslash && space(in))
                         state = linestate.done;
                     else
                         out = in;
-                } else if (state == linestate.readingquoted) {
+                } else if (state == linestate.reading_quoted) {
                     if (!backslash && in == '\"')
                         state = linestate.done;
                     else
                         out = in;
-                } else if (state == linestate.readinsinglequote) {
+                } else if (state == linestate.readin_single_quote) {
                     if (in == '\'')
                         state = linestate.done;
                     else
                         out = in;
                 }
                 if (state == linestate.done) {
-                    /* ASSERT (parmlen > 0); */
+                    /* ASSERT (parm_len > 0); */
                     state = linestate.initial;
                     parameters.add(currentarg);
                     currentarg = "";
@@ -280,7 +280,7 @@ public class ConfigParser {
     @SuppressWarnings("ConstantConditions")
     public VpnProfile convertProfile() throws ConfigParseError, IOException {
         boolean noauthtypeset = true;
-        VpnProfile np = new VpnProfile(CONVERTEDPROFILE);
+        VpnProfile np = new VpnProfile(CONVERTED_PROFILE);
         // Pull, client, tls-client
         np.clearDefaults();
         if (options.containsKey("client") || options.containsKey("pull")) {
@@ -290,7 +290,7 @@ public class ConfigParser {
         }
         Vector<String> secret = getOption("secret", 1, 2);
         if (secret != null) {
-            np.mAuthenticationType = VpnProfile.TYPESTATICKEYS;
+            np.mAuthenticationType = VpnProfile.TYPE_STATICKEYS;
             noauthtypeset = false;
             np.mUseTLSAuth = true;
             np.mTLSAuthFilename = secret.get(1);
@@ -303,7 +303,7 @@ public class ConfigParser {
             String routeExcluded = "";
             for (Vector<String> route : routes) {
                 String netmask = "255.255.255.255";
-                String gateway = "vpngateway";
+                String gateway = "vpn_gateway";
                 if (route.size() >= 3)
                     netmask = route.get(2);
                 if (route.size() >= 4)
@@ -311,7 +311,7 @@ public class ConfigParser {
                 String net = route.get(1);
                 try {
                     CIDRIP cidr = new CIDRIP(net, netmask);
-                    if (gateway.equals("netgateway"))
+                    if (gateway.equals("net_gateway"))
                         routeExcluded += cidr.toString() + " ";
                     else
                         routeopt += cidr.toString() + " ";
@@ -409,7 +409,7 @@ public class ConfigParser {
                     np.mSearchDomain = dhcpoption.get(2);
                 } else if (type.equals("DNS")) {
                     np.mOverrideDNS = true;
-                    if (np.mDNS1.equals(VpnProfile.DEFAULTDNS1))
+                    if (np.mDNS1.equals(VpnProfile.DEFAULT_DNS1))
                         np.mDNS1 = arg;
                     else
                         np.mDNS2 = arg;
@@ -444,7 +444,7 @@ public class ConfigParser {
         Vector<String> cert = getOption("cert", 1, 1);
         if (cert != null) {
             np.mClientCertFilename = cert.get(1);
-            np.mAuthenticationType = VpnProfile.TYPECERTIFICATES;
+            np.mAuthenticationType = VpnProfile.TYPE_CERTIFICATES;
             noauthtypeset = false;
         }
         Vector<String> key = getOption("key", 1, 1);
@@ -453,12 +453,12 @@ public class ConfigParser {
         Vector<String> pkcs12 = getOption("pkcs12", 1, 1);
         if (pkcs12 != null) {
             np.mPKCS12Filename = pkcs12.get(1);
-            np.mAuthenticationType = VpnProfile.TYPEKEYSTORE;
+            np.mAuthenticationType = VpnProfile.TYPE_KEYSTORE;
             noauthtypeset = false;
         }
         Vector<String> cryptoapicert = getOption("cryptoapicert", 1, 1);
         if (cryptoapicert != null) {
-            np.mAuthenticationType = VpnProfile.TYPEKEYSTORE;
+            np.mAuthenticationType = VpnProfile.TYPE_KEYSTORE;
             noauthtypeset = false;
         }
         Vector<String> compatnames = getOption("compat-names", 1, 2);
@@ -467,10 +467,10 @@ public class ConfigParser {
         if (tlsremote != null) {
             np.mRemoteCN = tlsremote.get(1);
             np.mCheckRemoteCN = true;
-            np.mX509AuthType = VpnProfile.X509VERIFYTLSREMOTE;
+            np.mX509AuthType = VpnProfile.X509_VERIFY_TLSREMOTE;
             if ((compatnames != null && compatnames.size() > 2) ||
                     (nonameremapping != null))
-                np.mX509AuthType = VpnProfile.X509VERIFYTLSREMOTECOMPATNOREMAPPING;
+                np.mX509AuthType = VpnProfile.X509_VERIFY_TLSREMOTE_COMPAT_NOREMAPPING;
         }
         Vector<String> verifyx509name = getOption("verify-x509-name", 1, 2);
         if (verifyx509name != null) {
@@ -478,15 +478,15 @@ public class ConfigParser {
             np.mCheckRemoteCN = true;
             if (verifyx509name.size() > 2) {
                 if (verifyx509name.get(2).equals("name"))
-                    np.mX509AuthType = VpnProfile.X509VERIFYTLSREMOTERDN;
+                    np.mX509AuthType = VpnProfile.X509_VERIFY_TLSREMOTE_RDN;
                 else if (verifyx509name.get(2).equals("subject"))
-                    np.mX509AuthType = VpnProfile.X509VERIFYTLSREMOTEDN;
+                    np.mX509AuthType = VpnProfile.X509_VERIFY_TLSREMOTE_DN;
                 else if (verifyx509name.get(2).equals("name-prefix"))
-                    np.mX509AuthType = VpnProfile.X509VERIFYTLSREMOTERDNPREFIX;
+                    np.mX509AuthType = VpnProfile.X509_VERIFY_TLSREMOTE_RDN_PREFIX;
                 else
                     throw new ConfigParseError("Unknown parameter to verify-x509-name: " + verifyx509name.get(2));
             } else {
-                np.mX509AuthType = VpnProfile.X509VERIFYTLSREMOTEDN;
+                np.mX509AuthType = VpnProfile.X509_VERIFY_TLSREMOTE_DN;
             }
         }
         Vector<String> x509usernamefield = getOption("x509-username-field", 1, 1);
@@ -521,15 +521,15 @@ public class ConfigParser {
         Vector<String> authuser = getOption("auth-user-pass", 0, 1);
         if (authuser != null) {
             if (noauthtypeset) {
-                np.mAuthenticationType = VpnProfile.TYPEUSERPASS;
-            } else if (np.mAuthenticationType == VpnProfile.TYPECERTIFICATES) {
-                np.mAuthenticationType = VpnProfile.TYPEUSERPASSCERTIFICATES;
-            } else if (np.mAuthenticationType == VpnProfile.TYPEKEYSTORE) {
-                np.mAuthenticationType = VpnProfile.TYPEUSERPASSKEYSTORE;
+                np.mAuthenticationType = VpnProfile.TYPE_USERPASS;
+            } else if (np.mAuthenticationType == VpnProfile.TYPE_CERTIFICATES) {
+                np.mAuthenticationType = VpnProfile.TYPE_USERPASS_CERTIFICATES;
+            } else if (np.mAuthenticationType == VpnProfile.TYPE_KEYSTORE) {
+                np.mAuthenticationType = VpnProfile.TYPE_USERPASS_KEYSTORE;
             }
             if (authuser.size() > 1) {
-                if (!authuser.get(1).startsWith(VpnProfile.INLINETAG))
-                    authuserpassfile = authuser.get(1);
+                if (!authuser.get(1).startsWith(VpnProfile.INLINE_TAG))
+                    auth_user_pass_file = authuser.get(1);
                 np.mUsername = null;
                 useEmbbedUserAuth(np, authuser.get(1));
             }
@@ -537,11 +537,11 @@ public class ConfigParser {
         Vector<String> authretry = getOption("auth-retry", 1, 1);
         if (authretry != null) {
             if (authretry.get(1).equals("none"))
-                np.mAuthRetry = VpnProfile.AUTHRETRYNONEFORGET;
+                np.mAuthRetry = VpnProfile.AUTH_RETRY_NONE_FORGET;
             else if (authretry.get(1).equals("nointeract"))
-                np.mAuthRetry = VpnProfile.AUTHRETRYNOINTERACT;
+                np.mAuthRetry = VpnProfile.AUTH_RETRY_NOINTERACT;
             else if (authretry.get(1).equals("interact"))
-                np.mAuthRetry = VpnProfile.AUTHRETRYNOINTERACT;
+                np.mAuthRetry = VpnProfile.AUTH_RETRY_NOINTERACT;
             else
                 throw new ConfigParseError("Unknown parameter to auth-retry: " + authretry.get(2));
         }
@@ -589,7 +589,7 @@ public class ConfigParser {
                     conn.mEnabled = false;
         }
         // Parse OpenVPN Access Server extra
-        Vector<String> friendlyname = meta.get("FRIENDLYNAME");
+        Vector<String> friendlyname = meta.get("FRIENDLY_NAME");
         if (friendlyname != null && friendlyname.size() > 1)
             np.mName = friendlyname.get(1);
         Vector<String> ocusername = meta.get("USERNAME");
@@ -602,7 +602,7 @@ public class ConfigParser {
     private Pair<Connection, Connection[]> parseConnection(String connection, Connection defaultValues) throws IOException, ConfigParseError {
         // Parse a connection Block as a new configuration file
         ConfigParser connectionParser = new ConfigParser();
-        StringReader reader = new StringReader(connection.substring(VpnProfile.INLINETAG.length()));
+        StringReader reader = new StringReader(connection.substring(VpnProfile.INLINE_TAG.length()));
         connectionParser.parseConfig(reader);
         Pair<Connection, Connection[]> conn = connectionParser.parseConnectionOptions(defaultValues);
         return conn;
@@ -779,7 +779,7 @@ public class ConfigParser {
     }
     enum linestate {
         initial,
-        readinsinglequote, readingquoted, readingunquoted, done
+        readin_single_quote, reading_quoted, reading_unquoted, done
     }
     public static class ConfigParseError extends Exception {
         private static final long serialVersionUID = -60L;

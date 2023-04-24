@@ -48,14 +48,14 @@ public class ConfirmDialog extends Activity implements CompoundButton.OnCheckedC
             }
             PackageManager pm = getPackageManager();
             ApplicationInfo app = pm.getApplicationInfo(mPackage, 0);
-            View view = View.inflate(this, R.layout.apiconfirm, null);
+            View view = View.inflate(this, R.layout.api_confirm, null);
             ((ImageView) view.findViewById(R.id.icon)).setImageDrawable(app.loadIcon(pm));
-            ((TextView) view.findViewById(R.id.prompt)).setText(getString(R.string.prompt, app.loadLabel(pm), getString(R.string.appname)));
+            ((TextView) view.findViewById(R.id.prompt)).setText(getString(R.string.prompt, app.loadLabel(pm), getString(R.string.app_name)));
             ((CompoundButton) view.findViewById(R.id.check)).setOnCheckedChangeListener(this);
             Builder builder = new AlertDialog.Builder(this);
             builder.setView(view);
             builder.setIconAttribute(android.R.attr.alertDialogIcon);
-            builder.setTitle(android.R.string.dialogalerttitle);
+            builder.setTitle(android.R.string.dialog_alert_title);
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
             mAlert = builder.create();
@@ -63,7 +63,7 @@ public class ConfirmDialog extends Activity implements CompoundButton.OnCheckedC
             mAlert.setOnShowListener(new OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
-                    mButton = mAlert.getButton(DialogInterface.BUTTONPOSITIVE);
+                    mButton = mAlert.getButton(DialogInterface.BUTTON_POSITIVE);
                     mButton.setEnabled(false);
                 }
             });
@@ -77,7 +77,7 @@ public class ConfirmDialog extends Activity implements CompoundButton.OnCheckedC
 
     @Override
     public void onBackPressed() {
-        setResult(RESULTCANCELED);
+        setResult(RESULT_CANCELED);
         finish();
     }
 
@@ -88,14 +88,14 @@ public class ConfirmDialog extends Activity implements CompoundButton.OnCheckedC
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTONPOSITIVE) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
             ExternalAppDatabase extapps = new ExternalAppDatabase(this);
             extapps.addApp(mPackage);
-            setResult(RESULTOK);
+            setResult(RESULT_OK);
             finish();
         }
-        if (which == DialogInterface.BUTTONNEGATIVE) {
-            setResult(RESULTCANCELED);
+        if (which == DialogInterface.BUTTON_NEGATIVE) {
+            setResult(RESULT_CANCELED);
             finish();
         }
     }

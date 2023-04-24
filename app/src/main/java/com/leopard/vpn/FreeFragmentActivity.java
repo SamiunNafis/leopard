@@ -55,183 +55,183 @@ import com.bumptech.glide.Glide;
 
 public class FreeFragmentActivity extends Fragment {
 
-    private FirebaseDatabase firebase = FirebaseDatabase.getInstance();
+    private FirebaseDatabase _firebase = FirebaseDatabase.getInstance();
 
-    private String serverurl = "";
-    private static final int RESULTOK = -1;
+    private String server_url = "";
+    private static final int RESULT_OK = -1;
 
     private ArrayList<HashMap<String, Object>> lmap = new ArrayList<>();
 
     private ListView listview1;
 
-    private DatabaseReference firedb = firebase.getReference("configData");
-    private ChildEventListener firedbchildlistener;
+    private DatabaseReference firedb = _firebase.getReference("configData");
+    private ChildEventListener _firedb_child_listener;
     private SharedPreferences ConnectionManagement;
     private Intent returnIntent = new Intent();
 
     @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.freefragment, container, false);
-        initialize(savedInstanceState, view);
+    public View onCreateView(@NonNull LayoutInflater _inflater, @Nullable ViewGroup _container, @Nullable Bundle _savedInstanceState) {
+        View _view = _inflater.inflate(R.layout.free_fragment, _container, false);
+        initialize(_savedInstanceState, _view);
         FirebaseApp.initializeApp(getContext());
         initializeLogic();
-        return view;
+        return _view;
     }
 
-    private void initialize(Bundle savedInstanceState, View view) {
-        listview1 = view.findViewById(R.id.listview1);
+    private void initialize(Bundle _savedInstanceState, View _view) {
+        listview1 = _view.findViewById(R.id.listview1);
         ConnectionManagement = getContext().getSharedPreferences("connectionManagement", Activity.MODE_PRIVATE);
 
-        firedbchildlistener = new ChildEventListener() {
+        _firedb_child_listener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot param1, String param2) {
-                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                final String childKey = param1.getKey();
-                final HashMap<String, Object> childValue = param1.getValue(ind);
+            public void onChildAdded(DataSnapshot _param1, String _param2) {
+                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                final String _childKey = _param1.getKey();
+                final HashMap<String, Object> _childValue = _param1.getValue(_ind);
                 firedb.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void onDataChange(DataSnapshot _dataSnapshot) {
                             lmap = new ArrayList<>();
                             try {
-                                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    HashMap<String, Object> map = data.getValue(ind);
-                                    lmap.add(map);
+                                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                                for (DataSnapshot _data : _dataSnapshot.getChildren()) {
+                                    HashMap<String, Object> _map = _data.getValue(_ind);
+                                    lmap.add(_map);
                                 }
                             }
-                            catch (Exception e) {
-                                e.printStackTrace();
+                            catch (Exception _e) {
+                                _e.printStackTrace();
                             }
                             listview1.setAdapter(new Listview1Adapter(lmap));
                             ((BaseAdapter)listview1.getAdapter()).notifyDataSetChanged();
                         }
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(DatabaseError _databaseError) {
                         }
                     });
             }
 
             @Override
-            public void onChildChanged(DataSnapshot param1, String param2) {
-                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                final String childKey = param1.getKey();
-                final HashMap<String, Object> childValue = param1.getValue(ind);
+            public void onChildChanged(DataSnapshot _param1, String _param2) {
+                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                final String _childKey = _param1.getKey();
+                final HashMap<String, Object> _childValue = _param1.getValue(_ind);
                 firedb.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void onDataChange(DataSnapshot _dataSnapshot) {
                             lmap = new ArrayList<>();
                             try {
-                                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    HashMap<String, Object> map = data.getValue(ind);
-                                    lmap.add(map);
+                                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                                for (DataSnapshot _data : _dataSnapshot.getChildren()) {
+                                    HashMap<String, Object> _map = _data.getValue(_ind);
+                                    lmap.add(_map);
                                 }
                             }
-                            catch (Exception e) {
-                                e.printStackTrace();
+                            catch (Exception _e) {
+                                _e.printStackTrace();
                             }
                             listview1.setAdapter(new Listview1Adapter(lmap));
                             ((BaseAdapter)listview1.getAdapter()).notifyDataSetChanged();
                         }
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(DatabaseError _databaseError) {
                         }
                     });
             }
 
             @Override
-            public void onChildMoved(DataSnapshot param1, String param2) {
+            public void onChildMoved(DataSnapshot _param1, String _param2) {
 
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot param1) {
-                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                final String childKey = param1.getKey();
-                final HashMap<String, Object> childValue = param1.getValue(ind);
+            public void onChildRemoved(DataSnapshot _param1) {
+                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                final String _childKey = _param1.getKey();
+                final HashMap<String, Object> _childValue = _param1.getValue(_ind);
 
             }
 
             @Override
-            public void onCancelled(DatabaseError param1) {
-                final int errorCode = param1.getCode();
-                final String errorMessage = param1.getMessage();
+            public void onCancelled(DatabaseError _param1) {
+                final int _errorCode = _param1.getCode();
+                final String _errorMessage = _param1.getMessage();
 
             }
         };
-        firedb.addChildEventListener(firedbchildlistener);
+        firedb.addChildEventListener(_firedb_child_listener);
     }
 
     private void initializeLogic() {
     }
 
-    public void more() {
+    public void _more() {
     }
 
     private class Listview1Adapter extends BaseAdapter {
 
-        ArrayList<HashMap<String, Object>> data;
+        ArrayList<HashMap<String, Object>> _data;
 
-        public Listview1Adapter(ArrayList<HashMap<String, Object>> arr) {
-            data = arr;
+        public Listview1Adapter(ArrayList<HashMap<String, Object>> _arr) {
+            _data = _arr;
         }
 
         @Override
         public int getCount() {
-            return data.size();
+            return _data.size();
         }
 
         @Override
-        public HashMap<String, Object> getItem(int index) {
-            return data.get(index);
+        public HashMap<String, Object> getItem(int _index) {
+            return _data.get(_index);
         }
 
         @Override
-        public long getItemId(int index) {
-            return index;
+        public long getItemId(int _index) {
+            return _index;
         }
 
         @Override
-        public View getView(final int position, View v, ViewGroup container) {
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View view = v;
-            if (view == null) {
-                view = inflater.inflate(R.layout.datacus, null);
+        public View getView(final int _position, View _v, ViewGroup _container) {
+            LayoutInflater _inflater = getActivity().getLayoutInflater();
+            View _view = _v;
+            if (_view == null) {
+                _view = _inflater.inflate(R.layout.data_cus, null);
             }
 
 
-            final LinearLayout container = view.findViewById(R.id.container);
-            final de.hdodenhof.circleimageview.CircleImageView servericon = view.findViewById(R.id.servericon);
-            final TextView title = view.findViewById(R.id.title);
-            final ImageView imageview1 = view.findViewById(R.id.imageview1);
-            final ImageView condition = view.findViewById(R.id.condition);
+            final LinearLayout container = _view.findViewById(R.id.container);
+            final de.hdodenhof.circleimageview.CircleImageView server_icon = _view.findViewById(R.id.server_icon);
+            final TextView title = _view.findViewById(R.id.title);
+            final ImageView imageview1 = _view.findViewById(R.id.imageview1);
+            final ImageView condition = _view.findViewById(R.id.condition);
 
-            if (data.get((int)position).containsKey("title")) {
-                title.setText(data.get((int)position).get("title").toString());
+            if (_data.get((int)_position).containsKey("title")) {
+                title.setText(_data.get((int)_position).get("title").toString());
             }
-            if (data.get((int)position).containsKey("countryicon")) {
-                Glide.with(getContext().getApplicationContext()).load(Uri.parse(data.get((int)position).get("countryicon").toString())).into(servericon);
+            if (_data.get((int)_position).containsKey("country_icon")) {
+                Glide.with(getContext().getApplicationContext()).load(Uri.parse(_data.get((int)_position).get("country_icon").toString())).into(server_icon);
             }
-            if (data.get((int)position).containsKey("url")) {
-                serverurl = data.get((int)position).get("url").toString();
+            if (_data.get((int)_position).containsKey("url")) {
+                server_url = _data.get((int)_position).get("url").toString();
             }
-            if (data.get((int)position).containsKey("condition")) {
-                if (data.get((int)position).get("condition").toString().equals("true")) {
-                    condition.setImageResource(R.drawable.networkmonitor1);
+            if (_data.get((int)_position).containsKey("condition")) {
+                if (_data.get((int)_position).get("condition").toString().equals("true")) {
+                    condition.setImageResource(R.drawable.network_monitor_1);
                 }
                 else {
-                    condition.setImageResource(R.drawable.networkmonitor2);
+                    condition.setImageResource(R.drawable.network_monitor_2);
                 }
             }
             container.setOnClickListener(new View.OnClickListener(){
                     @Override
-                    public void onClick(View view){
-                        transferDataToHone(data.get((int)position).get("title").toString(), data.get((int)position).get("url").toString(), data.get((int)position).get("countryicon").toString());
+                    public void onClick(View _view){
+                        _transferDataToHone(_data.get((int)_position).get("title").toString(), _data.get((int)_position).get("url").toString(), _data.get((int)_position).get("country_icon").toString());
                     }
                 });
 
-            return view;
+            return _view;
         }
     }
 
@@ -239,16 +239,17 @@ public class FreeFragmentActivity extends Fragment {
     }
 
 
-    public void transferDataToHone(final String name, final String url, final String icon) {
+    public void _transferDataToHone(final String _name, final String _url, final String _icon) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("title", name);
-        returnIntent.putExtra("icon", icon);
-        returnIntent.putExtra("url", url);
-        getActivity().setResult(RESULTOK, returnIntent);
+        returnIntent.putExtra("title", _name);
+        returnIntent.putExtra("icon", _icon);
+        returnIntent.putExtra("url", _url);
+        getActivity().setResult(RESULT_OK, returnIntent);
         getActivity().finish();
-        ConnectionManagement.edit().putString("name", name).commit();
-        ConnectionManagement.edit().putString("link", url).commit();
-        ConnectionManagement.edit().putString("icon", icon).commit();
+        ConnectionManagement.edit().putString("name", _name).commit();
+        ConnectionManagement.edit().putString("link", _url).commit();
+        ConnectionManagement.edit().putString("icon", _icon).commit();
     }
 
 }
+

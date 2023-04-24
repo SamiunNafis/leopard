@@ -16,9 +16,9 @@ import java.util.Iterator;
  */
 @SuppressWarnings("all")
 public class PemWriter extends BufferedWriter {
-    private static final int LINELENGTH = 64;
+    private static final int LINE_LENGTH = 64;
     private final int nlLength;
-    private char[] buf = new char[LINELENGTH];
+    private char[] buf = new char[LINE_LENGTH];
 
     /**
      * Base constructor.
@@ -54,7 +54,7 @@ public class PemWriter extends BufferedWriter {
         }
         // base64 encoding
         int dataLen = ((obj.getContent().length + 2) / 3) * 4;
-        size += dataLen + (((dataLen + LINELENGTH - 1) / LINELENGTH) * nlLength);
+        size += dataLen + (((dataLen + LINE_LENGTH - 1) / LINE_LENGTH) * nlLength);
         return size;
     }
 

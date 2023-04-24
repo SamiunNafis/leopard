@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Process;
 import android.util.Log;
+import com.leopard.vpn.R;
+
 
 public class App extends Application {
 
@@ -57,16 +59,16 @@ private Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
     private void createNotificationChannels() {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         
-        CharSequence name = getString(R.string.channelnamebackground);
-        NotificationChannel mChannel = new NotificationChannel(OpenVPNService.NOTIFICATIONCHANNELBGID, name, NotificationManager.IMPORTANCE_MIN);
-        mChannel.setDescription(getString(R.string.channeldescriptionbackground));
+        CharSequence name = getString(R.string.channel_name_background);
+        NotificationChannel mChannel = new NotificationChannel(OpenVPNService.NOTIFICATION_CHANNEL_BG_ID, name, NotificationManager.IMPORTANCE_MIN);
+        mChannel.setDescription(getString(R.string.channel_description_background));
         mChannel.enableLights(false);
         mChannel.setLightColor(Color.DKGRAY);
         mNotificationManager.createNotificationChannel(mChannel);
         // Connection status change messages
-        name = getString(R.string.channelnamestatus);
-        mChannel = new NotificationChannel(OpenVPNService.NOTIFICATIONCHANNELNEWSTATUSID, name, NotificationManager.IMPORTANCE_DEFAULT);
-        mChannel.setDescription(getString(R.string.channeldescriptionstatus));
+        name = getString(R.string.channel_name_status);
+        mChannel = new NotificationChannel(OpenVPNService.NOTIFICATION_CHANNEL_NEWSTATUS_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+        mChannel.setDescription(getString(R.string.channel_description_status));
         mChannel.enableLights(true);
         mChannel.setLightColor(Color.BLUE);
         mNotificationManager.createNotificationChannel(mChannel);

@@ -1,35 +1,49 @@
 package com.leopard.vpn;
 
-import android.content.Context;
+import android.animation.*;
+import android.app.*;
+import android.content.*;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
+import android.content.res.*;
+import android.graphics.*;
+import android.graphics.drawable.*;
+import android.media.*;
+import android.net.*;
+import android.net.Uri;
+import android.os.*;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.text.*;
+import android.text.style.*;
+import android.util.*;
+import android.view.*;
+import android.view.View.*;
+import android.view.animation.*;
+import android.webkit.*;
+import android.widget.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
+import androidx.annotation.*;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.firebase.FirebaseApp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import com.sanojpunchihewa.glowbutton.*;
+import java.io.*;
+import java.io.InputStream;
+import java.text.*;
+import java.util.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.*;
+import junit.*;
+import org.json.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Timer timer = new Timer();
+    private Timer _timer = new Timer();
 
     private LinearLayout base;
     private ImageView imageview1;
@@ -38,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private TimerTask timer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle _savedInstanceState) {
+        super.onCreate(_savedInstanceState);
         setContentView(R.layout.main);
-        initialize(savedInstanceState);
+        initialize(_savedInstanceState);
         FirebaseApp.initializeApp(this);
         MobileAds.initialize(this);
 
@@ -50,15 +64,15 @@ public class MainActivity extends AppCompatActivity {
         initializeLogic();
     }
 
-    private void initialize(Bundle savedInstanceState) {
+    private void initialize(Bundle _savedInstanceState) {
         base = findViewById(R.id.base);
         imageview1 = findViewById(R.id.imageview1);
     }
 
     private void initializeLogic() {
-        NavStatusBarColor("#FFFFFFFF", "#FFFFFFFF");
-        DARKICONS();
-        if (isNetworkAvailableAndConnected()) {
+        _NavStatusBarColor("#FFFFFFFF", "#FFFFFFFF");
+        _DARK_ICONS();
+        if (_isNetworkAvailableAndConnected()) {
             android.view.animation.Animation animation = new android.view.animation.AlphaAnimation(0, 1);
             animation.setDuration(600);
             imageview1.setAnimation(animation);
@@ -72,21 +86,21 @@ public class MainActivity extends AppCompatActivity {
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_SINGLE_TOP); 
 
-                                overridePendingTransition(android.R.anim.fadein, android.R.anim.fadeout);
+                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 startActivity(intent);
                                 finish();
                             }
                         });
                 }
             };
-            timer.schedule(timer, (int)(1000));
+            _timer.schedule(timer, (int)(1000));
         }
         else {
-            imageview1.setImageResource(R.drawable.imagenoconnection);
+            imageview1.setImageResource(R.drawable.image_no_connection);
         }
     }
 
-    public boolean isNetworkAvailableAndConnected() {
+    public boolean _isNetworkAvailableAndConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
@@ -94,68 +108,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void NavStatusBarColor(final String color1, final String color2) {
+    public void _NavStatusBarColor(final String _color1, final String _color2) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             Window w = this.getWindow();    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            w.setStatusBarColor(Color.parseColor("#" + color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + color2.replace("#", "")));
+            w.setStatusBarColor(Color.parseColor("#" + _color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + _color2.replace("#", "")));
         }
     }
 
 
-    public void DARKICONS() {
+    public void _DARK_ICONS() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         base.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
     }
 
-
-    @Deprecated
-    public void showMessage(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-    }
-
-    @Deprecated
-    public int getLocationX(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[0];
-    }
-
-    @Deprecated
-    public int getLocationY(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[1];
-    }
-
-    @Deprecated
-    public int getRandom(int min, int max) {
-        Random random = new Random();
-        return random.nextInt(max - min + 1) + min;
-    }
-
-    @Deprecated
-    public ArrayList<Double> getCheckedItemPositionsToArray(ListView list) {
-        ArrayList<Double> result = new ArrayList<Double>();
-        SparseBooleanArray arr = list.getCheckedItemPositions();
-        for (int iIdx = 0; iIdx < arr.size(); iIdx++) {
-            if (arr.valueAt(iIdx))
-                result.add((double)arr.keyAt(iIdx));
-        }
-        return result;
-    }
-
-    @Deprecated
-    public float getDip(int input) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, input, getResources().getDisplayMetrics());
-    }
-
-    @Deprecated
-    public int getDisplayWidthPixels() {
-        return getResources().getDisplayMetrics().widthPixels;
-    }
-
-    @Deprecated
-    public int getDisplayHeightPixels() {
-        return getResources().getDisplayMetrics().heightPixels;
-    }
 }
+

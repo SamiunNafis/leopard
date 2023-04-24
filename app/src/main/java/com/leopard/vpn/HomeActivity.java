@@ -82,7 +82,7 @@ import android.content.BroadcastReceiver;
 
 public class HomeActivity extends AppCompatActivity implements VpnStatus.StateListener {
 
-    private Timer timer = new Timer();
+    private Timer _timer = new Timer();
 
     private int colorFrom = Color.parseColor("#E0E0E0");
     private int colorTo = Color.parseColor("#00E676");
@@ -122,7 +122,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
     private LinearLayout linear4;
     private ScrollView vscroll3;
-    private LinearLayout servcon;
+    private LinearLayout serv_con;
     private ImageView imageview2;
     private TextView textview4;
     private LinearLayout base;
@@ -132,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     private LinearLayout ggcontanholdee;
     private LinearLayout linear10;
     private TextView ip;
-    private LinearLayout connectcontainer;
+    private LinearLayout connect_container;
     private TextView timer;
     private TextView textview7;
     private TextView textview1;
@@ -149,10 +149,10 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     private RelativeLayout l1;
     private RelativeLayout l2;
     private LinearLayout linear9;
-    private GlowButton circlecontainer1;
+    private GlowButton circle_container1;
     private LinearLayout linear6;
     private ImageView imageview3;
-    private GlowButton circlecontainer2;
+    private GlowButton circle_container2;
     private LinearLayout linear8;
     private ImageView imageview4;
     private LinearLayout btnc;
@@ -167,22 +167,22 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     private SharedPreferences ConnectionManagement;
     private Intent intent = new Intent();
     private TimerTask t;
-    private RequestNetwork iprequest;
-    private RequestNetwork.RequestListener iprequestrequestlistener;
+    private RequestNetwork ip_request;
+    private RequestNetwork.RequestListener _ip_request_request_listener;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle _savedInstanceState) {
+        super.onCreate(_savedInstanceState);
         setContentView(R.layout.home);
-        initialize(savedInstanceState);
+        initialize(_savedInstanceState);
         FirebaseApp.initializeApp(this);
         MobileAds.initialize(this);
 
         List<String> testDeviceIds = Arrays.asList("874A04C22612BAC3077E65563760EC57");
         MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build());
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READEXTERNALSTORAGE) == PackageManager.PERMISSIONDENIED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READEXTERNALSTORAGE}, 1000);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1000);
         } else {
             initializeLogic();
         }
@@ -196,10 +196,10 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         }
     }
 
-    private void initialize(Bundle savedInstanceState) {
+    private void initialize(Bundle _savedInstanceState) {
         linear4 = findViewById(R.id.linear4);
         vscroll3 = findViewById(R.id.vscroll3);
-        servcon = findViewById(R.id.servcon);
+        serv_con = findViewById(R.id.serv_con);
         imageview2 = findViewById(R.id.imageview2);
         textview4 = findViewById(R.id.textview4);
         base = findViewById(R.id.base);
@@ -209,7 +209,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         ggcontanholdee = findViewById(R.id.ggcontanholdee);
         linear10 = findViewById(R.id.linear10);
         ip = findViewById(R.id.ip);
-        connectcontainer = findViewById(R.id.connectcontainer);
+        connect_container = findViewById(R.id.connect_container);
         timer = findViewById(R.id.timer);
         textview7 = findViewById(R.id.textview7);
         textview1 = findViewById(R.id.textview1);
@@ -226,10 +226,10 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         l1 = findViewById(R.id.l1);
         l2 = findViewById(R.id.l2);
         linear9 = findViewById(R.id.linear9);
-        circlecontainer1 = findViewById(R.id.circlecontainer1);
+        circle_container1 = findViewById(R.id.circle_container1);
         linear6 = findViewById(R.id.linear6);
         imageview3 = findViewById(R.id.imageview3);
-        circlecontainer2 = findViewById(R.id.circlecontainer2);
+        circle_container2 = findViewById(R.id.circle_container2);
         linear8 = findViewById(R.id.linear8);
         imageview4 = findViewById(R.id.imageview4);
         btnc = findViewById(R.id.btnc);
@@ -240,11 +240,11 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         adview2 = findViewById(R.id.adview2);
         line = findViewById(R.id.line);
         ConnectionManagement = getSharedPreferences("connectionManagement", Activity.MODE_PRIVATE);
-        iprequest = new RequestNetwork(this);
+        ip_request = new RequestNetwork(this);
 
         linear10.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View _view) {
                     intent.setClass(getApplicationContext(), PurchaseActivity.class);
                     startActivity(intent);
                 }
@@ -252,7 +252,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
         server.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View _view) {
                     if (stilConnecting || connected) {
                         SamiunUtil.showMessage(getApplicationContext(), "Please disconnect first!");
                     }
@@ -267,7 +267,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
         button1.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View _view) {
                     time++;
                     SamiunUtil.showMessage(getApplicationContext(), "1 hour added");
                 }
@@ -275,22 +275,22 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
         gcontain.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View _view) {
                     intent.setClass(getApplicationContext(), PurchaseActivity.class);
                     startActivity(intent);
                 }
             });
 
-        circlecontainer1.setOnClickListener(new View.OnClickListener() {
+        circle_container1.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    circlecontainer2.performClick();
+                public void onClick(View _view) {
+                    circle_container2.performClick();
                 }
             });
 
-        circlecontainer2.setOnClickListener(new View.OnClickListener() {
+        circle_container2.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View _view) {
                     try{
                         stopwatch = 0;
                         stopwatch2 = 0;
@@ -300,7 +300,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
                     }
                     try{
-                        if (!networkAvailable()) {
+                        if (!_networkAvailable()) {
                             SamiunUtil.showMessage(getApplicationContext(), "Please enable internet connection!");
                         }
                         else {
@@ -317,14 +317,14 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                                             }catch(Exception e){
 
                                             }
-                                            startVPN();
+                                            _startVPN();
                                             stilConnecting = true;
                                             App.isStart = true;
                                             animateBackground(colorFrom, colorTo);
                                             textview3.setText("Connecting");
                                         }
                                         else {
-                                            stopVPN();
+                                            _stopVPN();
                                             stilConnecting = false;
                                             App.isStart = false;
                                             animateBackground(colorTo, colorFrom);
@@ -332,7 +332,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
                                             textview3.setTextColor(0xFF757575);
                                             try{
-                                                onVpnConnected();
+                                                _onVpnConnected();
                                             }catch(Exception e){
 
                                             }
@@ -350,43 +350,43 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
         btnc.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    circlecontainer2.performClick();
+                public void onClick(View _view) {
+                    circle_container2.performClick();
                 }
             });
 
-        iprequestrequestlistener = new RequestNetwork.RequestListener() {
+        _ip_request_request_listener = new RequestNetwork.RequestListener() {
             @Override
-            public void onResponse(String param1, String param2, HashMap<String, Object> param3) {
-                final String tag = param1;
-                final String response = param2;
-                final HashMap<String, Object> responseHeaders = param3;
+            public void onResponse(String _param1, String _param2, HashMap<String, Object> _param3) {
+                final String _tag = _param1;
+                final String _response = _param2;
+                final HashMap<String, Object> _responseHeaders = _param3;
                 if (connected) {
-                    ip.setText("IP : ".concat(response));
+                    ip.setText("IP : ".concat(_response));
                     ip.setVisibility(View.VISIBLE);
                 }
                 else {
                     ip.setVisibility(View.GONE);
                 }
                 try{
-                    TransitionManager(base, 500);
+                    _TransitionManager(base, 500);
                 }catch(Exception e){
 
                 }
             }
 
             @Override
-            public void onErrorResponse(String param1, String param2) {
-                final String tag = param1;
-                final String message = param2;
+            public void onErrorResponse(String _param1, String _param2) {
+                final String _tag = _param1;
+                final String _message = _param2;
 
             }
         };
     }
 
     private void initializeLogic() {
-        NavStatusBarColor("#FFFFFFFF", "#FFFFFFFF");
-        DARKICONS();
+        _NavStatusBarColor("#FFFFFFFF", "#FFFFFFFF");
+        _DARK_ICONS();
 
 
         ip.setVisibility(View.GONE);
@@ -395,7 +395,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         //timer.getBackground().setAlpha(0);
         timer.setAlpha((float)(0));
         linear10.setVisibility(View.VISIBLE);
-        servcon.setBackgroundColor(Color.TRANSPARENT);
+        serv_con.setBackgroundColor(Color.TRANSPARENT);
         btnc.setBackground(new GradientDrawable() { public GradientDrawable getIns(int a, int b, int c, int d) { this.setCornerRadius(a); this.setStroke(b, c); this.setColor(d); return this; } }.getIns((int)96, (int)2, 0xFF757575, Color.TRANSPARENT));
         time = 1;
         n = 0;
@@ -404,17 +404,17 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         stopwatch3 = 0;
         stopwatch4 = 0;
         try{
-            IconColour(imageview3, "#ffffff");
-            IconColour(imageview5, "#ffffff");
+            _Icon_Colour(imageview3, "#ffffff");
+            _Icon_Colour(imageview5, "#ffffff");
         }catch(Exception e){
 
         }
         try{
-            IconColour(imageview4, "#ffffff");
+            _Icon_Colour(imageview4, "#ffffff");
         }catch(Exception e){
 
         }
-        onCreate();
+        _onCreate_();
 
 
 
@@ -423,7 +423,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
             int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
             int clrs [] = {0xFF19376D,0xFF19376D};
-            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TOPBOTTOM, clrs);
+            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, clrs);
             SketchUi.setCornerRadius(d*96);
             SketchUi.setStroke(d*1, 0xFFFFFFFF);
             linear10.setElevation(d*0);
@@ -435,7 +435,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
             int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
             int clrs [] = {0xFFFFFFFF,0xFFFFFFFF};
-            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFTRIGHT, clrs);
+            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT, clrs);
             SketchUi.setCornerRadius(d*96);
             SketchUi.setStroke(d*1, 0xFF757575);
             btnc.setElevation(d*0);
@@ -447,7 +447,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
             int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
             int clrs [] = {0xFFFFFFFF,0xFFFFFFFF};
-            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFTRIGHT, clrs);
+            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT, clrs);
             SketchUi.setCornerRadius(d*14);
             SketchUi.setStroke(d*2, 0xFF757575);
             server.setElevation(d*2);
@@ -459,7 +459,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
             int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
             int clrs [] = {0xFF8BC34A,0xFF8BC34A};
-            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFTRIGHT, clrs);
+            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT, clrs);
             SketchUi.setCornerRadius(d*96);
             SketchUi.setStroke(d*0, 0xFFFFFFFF);
             offertimeleft.setElevation(d*0);
@@ -484,9 +484,9 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if ((resultCode == Activity.RESULTOK) && (requestCode == pickServerREQ)) {
+    protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
+        super.onActivityResult(_requestCode, _resultCode, _data);
+        if ((_resultCode == Activity.RESULT_OK) && (_requestCode == pickServerREQ)) {
             isEmpty = false;
             ProfileManager.setConntectedVpnProfileDisconnected(HomeActivity.this);
             try {
@@ -496,9 +496,9 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             } catch (Exception e) {
 
             }
-            getServerData(data.getStringExtra("title"), data.getStringExtra("url"), data.getStringExtra("icon"));
+            _getServerData(_data.getStringExtra("title"), _data.getStringExtra("url"), _data.getStringExtra("icon"));
         }
-        switch (requestCode) {
+        switch (_requestCode) {
 
             default:
                 break;
@@ -512,8 +512,8 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         VpnStatus.addStateListener(this);
 
         Intent intent = new Intent(this, OpenVPNService.class);
-        intent.setAction(OpenVPNService.STARTSERVICE);
-        bindService(intent, mConnection, Context.BINDAUTOCREATE);
+        intent.setAction(OpenVPNService.START_SERVICE);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -541,12 +541,12 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             adview2.destroy();
         }
     }
-    public void onCreate() {
-        designs();
+    public void _onCreate_() {
+        _designs();
         if (ConnectionManagement.getString("name", "").equals("")) {
             isEmpty = true;
             textview2.setText("NO SERVER SELECTED");
-            circleimageview1.setImageResource(R.drawable.iconbackground);
+            circleimageview1.setImageResource(R.drawable.icon_background);
         }
         else {
             isEmpty = false;
@@ -556,21 +556,21 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void textview(final TextView t, final String s) {
-        FNAME = "fonts/".concat(s.concat(".otf"));
+    public void _textview(final TextView _t, final String _s) {
+        FNAME = "fonts/".concat(_s.concat(".otf"));
         try{
-            t.setTypeface(Typeface.createFromAsset(getAssets(), FNAME), 0);
+            _t.setTypeface(Typeface.createFromAsset(getAssets(), FNAME), 0);
         }catch(Exception e){
             SamiunUtil.showMessage(getApplicationContext(), "Error!");
         }
     }
 
 
-    public void designs() {
-        textview(textview2, "manropesemibold");
-        textview(timer, "manropemedium");
-        textview(ip, "manropemedium");
-        textview(textview3, "manropemedium");
+    public void _designs() {
+        _textview(textview2, "manrope_semibold");
+        _textview(timer, "manrope_medium");
+        _textview(ip, "manrope_medium");
+        _textview(textview3, "manrope_medium");
         textview3.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/josefinsanslight.ttf"), 0);
 
         textview2.setSelected(true); 
@@ -578,7 +578,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void more() {
+    public void _more() {
     }
     public void animateBackground(int colorFrom,int colorTo){
 
@@ -597,8 +597,8 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
     public void startVPNConnection(VpnProfile vp) {
         Intent intent = new Intent(getApplicationContext(), LaunchVPN.class);
-        intent.putExtra(LaunchVPN.EXTRAKEY, vp.getUUID().toString());
-        intent.setAction(Intent.ACTIONMAIN);
+        intent.putExtra(LaunchVPN.EXTRA_KEY, vp.getUUID().toString());
+        intent.setAction(Intent.ACTION_MAIN);
         startActivity(intent);
     }
     public void stopVPNConnection() {
@@ -622,7 +622,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
             int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
             int clrs [] = {0xFF0B2447,0xFF19376D};
-            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFTRIGHT, clrs);
+            SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT, clrs);
             SketchUi.setCornerRadius(d*96);
             SketchUi.setStroke(d*0,0xFFFFFFFF);
             btnc.setElevation(d*7);
@@ -630,7 +630,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             btnc.setBackground(SketchUiRD);
             btnc.setClickable(true);
         }
-        setConnectedMore();
+        _setConnectedMore();
     }
     void changeStateButton(Boolean state) {
         if (state) {
@@ -641,7 +641,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                 android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
                 int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
                 int clrs [] = {0xFF0B2447,0xFF19376D};
-                SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFTRIGHT, clrs);
+                SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT, clrs);
                 SketchUi.setCornerRadius(d*96);
                 SketchUi.setStroke(d*0,0xFFFFFFFF);
                 btnc.setElevation(d*7);
@@ -657,7 +657,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                 android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
                 int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
                 int clrs [] = {Color.TRANSPARENT,Color.TRANSPARENT};
-                SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TOPBOTTOM, clrs);
+                SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, clrs);
                 SketchUi.setCornerRadius(d*96);
                 SketchUi.setStroke(d*1,0xFF757575);
                 btnc.setElevation(d*0);
@@ -676,7 +676,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                         setConnected();
                     } else {
                     }
-                    if (state.equals("AUTHFAILED")) {
+                    if (state.equals("AUTH_FAILED")) {
                         Toast.makeText(getApplicationContext(), "Wrong Username or Password!", Toast.LENGTH_SHORT).show();
                         changeStateButton(false);
                     }
@@ -737,27 +737,27 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void startVPNFromURL(final String url) {
+    public void _startVPNFromURL(final String _url) {
         if (!App.isStart) {
             DataCleanManager.cleanCache(HomeActivity.this);
-            progressDialog(true);
+            _progressDialog(true);
             profileAsync = new ProfileAsync(this, new ProfileAsync.OnProfileLoadListener() {
                     @Override
                     public void onProfileLoadSuccess() {
-                        progressDialog(false);
+                        _progressDialog(false);
                     }
                     @Override
                     public void onProfileLoadFailed(String msg) {
                         showMessage("Failed");
-                        progressDialog(false);
+                        _progressDialog(false);
                     }
-                },url);
+                },_url);
             profileAsync.execute();
         }
     }
 
 
-    public void startVPN() {
+    public void _startVPN() {
         try {
 
             ProfileManager pm = ProfileManager.getInstance(HomeActivity.this);
@@ -772,7 +772,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void stopVPN() {
+    public void _stopVPN() {
         try{
             stopVPNConnection();
             connected = false;
@@ -782,9 +782,9 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void setConnectedMore() {
+    public void _setConnectedMore() {
         ip.setVisibility(View.GONE);
-        onVpnConnected();
+        _onVpnConnected();
         URL = ConnectionManagement.getString("link", "");
         ICON = ConnectionManagement.getString("icon", "");
         name = ConnectionManagement.getString("name", "");
@@ -793,22 +793,22 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void getServerData(final String name, final String link, final String icon) {
-        startVPNFromURL(link);
-        textview2.setText(name);
-        Glide.with(getApplicationContext()).load(Uri.parse(icon)).into(circleimageview1);
+    public void _getServerData(final String _name, final String _link, final String _icon) {
+        _startVPNFromURL(_link);
+        textview2.setText(_name);
+        Glide.with(getApplicationContext()).load(Uri.parse(_icon)).into(circleimageview1);
     }
 
 
-    public void progressDialog(final boolean t) {
-        if (t) {
+    public void _progressDialog(final boolean _t) {
+        if (_t) {
             dialog = new AlertDialog.Builder(HomeActivity.this).create();
             LayoutInflater inflater = getLayoutInflater();
 
-            View convertView = (View) inflater.inflate(R.layout.loadingcus, null);
+            View convertView = (View) inflater.inflate(R.layout.loading_cus, null);
             dialog.setView(convertView);
 
-            dialog.requestWindowFeature(Window.FEATURENOTITLE);  dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);  dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
 
 
             LinearLayout l1 = (LinearLayout) convertView.findViewById(R.id.base);
@@ -826,7 +826,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public boolean networkAvailable() {
+    public boolean _networkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) HomeActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
@@ -834,11 +834,11 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void onVpnConnected() {
+    public void _onVpnConnected() {
         if (connected) {
             if (!(time == 0)) {
                 ip.setVisibility(View.GONE);
-                iprequest.startRequestNetwork(RequestNetworkController.GET, "https://api.ipify.org/?format=txt", "SamiunNafis", iprequestrequestlistener);
+                ip_request.startRequestNetwork(RequestNetworkController.GET, "https://api.ipify.org/?format=txt", "SamiunNafis", _ip_request_request_listener);
                 try{
                     l1.setVisibility(View.GONE);
                 }catch(Exception e){
@@ -853,12 +853,12 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                 //timer.getBackground().setAlpha(255);
                 timer.setAlpha((float)(1));
                 try{
-                    IconColour(imageview3, "#ffffff");
+                    _Icon_Colour(imageview3, "#ffffff");
                 }catch(Exception e){
 
                 }
                 try{
-                    TransitionManager(base, 1000);
+                    _TransitionManager(base, 1000);
                 }catch(Exception e){
 
                 }
@@ -883,12 +883,12 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
             //timer.getBackground().setAlpha(0);
             timer.setAlpha((float)(0));
             try{
-                IconColour(imageview3, "#ffffff");
+                _Icon_Colour(imageview3, "#ffffff");
             }catch(Exception e){
 
             }
             try{
-                TransitionManager(base, 1000);
+                _TransitionManager(base, 1000);
             }catch(Exception e){
 
             }
@@ -935,7 +935,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                                     if ((Double.parseDouble(textview7.getText().toString()) == 5) || (Double.parseDouble(textview7.getText().toString()) > 5)) {
                                         if (textview8.getText().toString().endsWith(String.valueOf((long)(time))) || (Double.parseDouble(textview8.getText().toString()) > time)) {
                                             SamiunUtil.showMessage(getApplicationContext(), "Time has been outed");
-                                            stopVPN();
+                                            _stopVPN();
                                             stilConnecting = false;
                                             App.isStart = false;
                                             animateBackground(colorTo, colorFrom);
@@ -944,7 +944,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                                             textview3.setTextColor(0xFF757575);
                                             runningTimer = false;
                                             try{
-                                                onVpnConnected();
+                                                _onVpnConnected();
                                             }catch(Exception e){
 
                                             }
@@ -957,7 +957,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                             });
                     }
                 };
-                timer.scheduleAtFixedRate(t, (int)(1000), (int)(1000));
+                _timer.scheduleAtFixedRate(t, (int)(1000), (int)(1000));
             }
             else {
                 stopwatch = 0;
@@ -974,33 +974,33 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     }
 
 
-    public void NavStatusBarColor(final String color1, final String color2) {
+    public void _NavStatusBarColor(final String _color1, final String _color2) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            Window w = this.getWindow();    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BARBACKGROUNDS);
-            w.setStatusBarColor(Color.parseColor("#" + color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + color2.replace("#", "")));
+            Window w = this.getWindow();    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            w.setStatusBarColor(Color.parseColor("#" + _color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + _color2.replace("#", "")));
         }
     }
 
 
-    public void DARKICONS() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEMUIFLAGLIGHTSTATUSBAR);
-        base.setSystemUiVisibility(View.SYSTEMUIFLAGLIGHTNAVIGATIONBAR);
+    public void _DARK_ICONS() {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        base.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
     }
 
 
-    public void IconColour(final ImageView iconview, final String colour) {
-        iconview.getDrawable().setColorFilter(Color.parseColor(colour), PorterDuff.Mode.SRCIN);
+    public void _Icon_Colour(final ImageView _iconview, final String _colour) {
+        _iconview.getDrawable().setColorFilter(Color.parseColor(_colour), PorterDuff.Mode.SRC_IN);
     }
 
 
-    public void TransitionManager(final View view, final double duration) {
-        LinearLayout viewgroup =(LinearLayout) view;
+    public void _TransitionManager(final View _view, final double _duration) {
+        LinearLayout viewgroup =(LinearLayout) _view;
 
-        android.transition.AutoTransition autoTransition = new android.transition.AutoTransition(); autoTransition.setDuration((long)duration); android.transition.TransitionManager.beginDelayedTransition(viewgroup, autoTransition);
+        android.transition.AutoTransition autoTransition = new android.transition.AutoTransition(); autoTransition.setDuration((long)_duration); android.transition.TransitionManager.beginDelayedTransition(viewgroup, autoTransition);
     }
 
 
-    public void showNotification(final String title, final String text, final int icon) {
+    public void _showNotification(final String _title, final String _text, final int _icon) {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1009,12 +1009,12 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
 
         Notification.Builder notificationBuilder = new Notification.Builder(this, "leovpn");
         notificationBuilder
-            .setSmallIcon(icon)
-            .setContentTitle(title)
-            .setContentText(text)
+            .setSmallIcon(_icon)
+            .setContentTitle(_title)
+            .setContentText(_text)
             .setNumber(3);
 
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATIONSERVICE);
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(1, notificationBuilder.build());
     }
@@ -1022,60 +1022,10 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
     private void makeNotificationChannel(String channelId,String channelName, int importance) {
 
         NotificationChannel channel= new NotificationChannel(channelId, channelName, importance);
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATIONSERVICE);
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(channel);
 
     }
 
-
-    @Deprecated
-    public void showMessage(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-    }
-
-    @Deprecated
-    public int getLocationX(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[0];
-    }
-
-    @Deprecated
-    public int getLocationY(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[1];
-    }
-
-    @Deprecated
-    public int getRandom(int min, int max) {
-        Random random = new Random();
-        return random.nextInt(max - min + 1) + min;
-    }
-
-    @Deprecated
-    public ArrayList<Double> getCheckedItemPositionsToArray(ListView list) {
-        ArrayList<Double> result = new ArrayList<Double>();
-        SparseBooleanArray arr = list.getCheckedItemPositions();
-        for (int iIdx = 0; iIdx < arr.size(); iIdx++) {
-            if (arr.valueAt(iIdx))
-                result.add((double)arr.keyAt(iIdx));
-        }
-        return result;
-    }
-
-    @Deprecated
-    public float getDip(int input) {
-        return TypedValue.applyDimension(TypedValue.COMPLEXUNITDIP, input, getResources().getDisplayMetrics());
-    }
-
-    @Deprecated
-    public int getDisplayWidthPixels() {
-        return getResources().getDisplayMetrics().widthPixels;
-    }
-
-    @Deprecated
-    public int getDisplayHeightPixels() {
-        return getResources().getDisplayMetrics().heightPixels;
-    }
 }
+

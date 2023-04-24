@@ -80,8 +80,8 @@ public class StatusListener {
 
     void init(Context c) {
         Intent intent = new Intent(c, OpenVPNStatusService.class);
-        intent.setAction(OpenVPNService.STARTSERVICE);
+        intent.setAction(OpenVPNService.START_SERVICE);
         mCacheDir = c.getCacheDir();
-        c.bindService(intent, mConnection, Context.BINDAUTOCREATE);
+        c.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 }

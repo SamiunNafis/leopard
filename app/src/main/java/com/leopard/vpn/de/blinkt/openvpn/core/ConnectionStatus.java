@@ -9,16 +9,16 @@ import android.os.Parcelable;
  * Created by arne on 08.11.16.
  */
 public enum ConnectionStatus implements Parcelable {
-    LEVELCONNECTED,
-    LEVELVPNPAUSED,
-    LEVELCONNECTINGSERVERREPLIED,
-    LEVELCONNECTINGNOSERVERREPLYYET,
-    LEVELNONETWORK,
-    LEVELNOTCONNECTED,
-    LEVELSTART,
-    LEVELAUTHFAILED,
-    LEVELWAITINGFORUSERINPUT,
-    UNKNOWNLEVEL;
+    LEVEL_CONNECTED,
+    LEVEL_VPNPAUSED,
+    LEVEL_CONNECTING_SERVER_REPLIED,
+    LEVEL_CONNECTING_NO_SERVER_REPLY_YET,
+    LEVEL_NONETWORK,
+    LEVEL_NOTCONNECTED,
+    LEVEL_START,
+    LEVEL_AUTH_FAILED,
+    LEVEL_WAITING_FOR_USER_INPUT,
+    UNKNOWN_LEVEL;
     public static final Creator<ConnectionStatus> CREATOR = new Creator<ConnectionStatus>() {
         @Override
         public ConnectionStatus createFromParcel(Parcel in) {

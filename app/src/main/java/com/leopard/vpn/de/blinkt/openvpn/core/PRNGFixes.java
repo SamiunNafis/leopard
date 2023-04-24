@@ -39,9 +39,9 @@ import java.security.Security;
  * application's {@code onCreate}.
  */
 public final class PRNGFixes {
-    private static final int VERSIONCODEJELLY_BEAN = 16;
-    private static final int VERSIONCODEJELLY_BEANMR2 = 18;
-    private static final byte[] BUILDFINGERPRINTANDDEVICESERIAL = getBuildFingerprintAndDeviceSerial();
+    private static final int VERSION_CODE_JELLY_BEAN = 16;
+    private static final int VERSION_CODE_JELLY_BEAN_MR2 = 18;
+    private static final byte[] BUILD_FINGERPRINT_AND_DEVICE_SERIAL = getBuildFingerprintAndDeviceSerial();
 
     /**
      * Hidden constructor to prevent instantiation.
@@ -66,15 +66,15 @@ public final class PRNGFixes {
      * @throws SecurityException if the fix is needed but could not be applied.
      */
     private static void applyOpenSSLFix() throws SecurityException {
-        if ((Build.VERSION.SDK_INT < VERSIONCODEJELLY_BEAN) || (Build.VERSION.SDK_INT > VERSIONCODEJELLY_BEANMR2)) {
+        if ((Build.VERSION.SDK_INT < VERSION_CODE_JELLY_BEAN) || (Build.VERSION.SDK_INT > VERSION_CODE_JELLY_BEAN_MR2)) {
             // No need to apply the fix
             return;
         }
         try {
             // Mix in the device- and invocation-specific seed.
-            Class.forName("org.apache.harmony.xnet.provider.jsse.NativeCrypto").getMethod("RANDseed", byte[].class).invoke(null, generateSeed());
+            Class.forName("org.apache.harmony.xnet.provider.jsse.NativeCrypto").getMethod("RAND_seed", byte[].class).invoke(null, generateSeed());
             // Mix output of Linux PRNG into OpenSSL's PRNG
-            int bytesRead = (Integer) Class.forName("org.apache.harmony.xnet.provider.jsse.NativeCrypto").getMethod("RANDloadfile", String.class, long.class).invoke(null, "/dev/urandom", 1024);
+            int bytesRead = (Integer) Class.forName("org.apache.harmony.xnet.provider.jsse.NativeCrypto").getMethod("RAND_load_file", String.class, long.class).invoke(null, "/dev/urandom", 1024);
             if (bytesRead != 1024) {
                 throw new IOException("Unexpected number of bytes read from Linux PRNG: " + bytesRead);
             }
@@ -91,7 +91,7 @@ public final class PRNGFixes {
      * @throws SecurityException if the fix is needed but could not be applied.
      */
     private static void installLinuxPRNGSecureRandom() throws SecurityException {
-        if (Build.VERSION.SDK_INT > VERSIONCODEJELLY_BEANMR2) {
+        if (Build.VERSION.SDK_INT > VERSION_CODE_JELLY_BEAN_MR2) {
             // No need to apply the fix
             return;
         }
@@ -131,7 +131,7 @@ public final class PRNGFixes {
             seedBufferOut.writeLong(System.nanoTime());
             seedBufferOut.writeInt(Process.myPid());
             seedBufferOut.writeInt(Process.myUid());
-            seedBufferOut.write(BUILDFINGERPRINTANDDEVICESERIAL);
+            seedBufferOut.write(BUILD_FINGERPRINT_AND_DEVICE_SERIAL);
             seedBufferOut.close();
             return seedBuffer.toByteArray();
         } catch (IOException e) {
@@ -203,7 +203,7 @@ public final class PRNGFixes {
          * serialized (on sLock) to ensure that multiple threads do not get
          * duplicated PRNG output.
          */
-        private static final File URANDOMFILE = new File("/dev/urandom");
+        private static final File URANDOM_FILE = new File("/dev/urandom");
         private static final Object sLock = new Object();
         /**
          * Input stream for reading from Linux PRNG or {@code null} if not yet
@@ -238,7 +238,7 @@ public final class PRNGFixes {
             } catch (IOException e) {
                 // On a small fraction of devices /dev/urandom is not writable.
                 // Log and ignore.
-                Log.w(PRNGFixes.class.getSimpleName(), "Failed to mix seed into " + URANDOMFILE);
+                Log.w(PRNGFixes.class.getSimpleName(), "Failed to mix seed into " + URANDOM_FILE);
             } finally {
                 mSeeded = true;
             }
@@ -259,7 +259,7 @@ public final class PRNGFixes {
                     in.readFully(bytes);
                 }
             } catch (IOException e) {
-                throw new SecurityException("Failed to read from " + URANDOMFILE, e);
+                throw new SecurityException("Failed to read from " + URANDOM_FILE, e);
             }
         }
 
@@ -278,9 +278,9 @@ public final class PRNGFixes {
                     // PRNG output performance and can live with future PRNG
                     // output being pulled into this process prematurely.
                     try {
-                        sUrandomIn = new DataInputStream(new FileInputStream(URANDOMFILE));
+                        sUrandomIn = new DataInputStream(new FileInputStream(URANDOM_FILE));
                     } catch (IOException e) {
-                        throw new SecurityException("Failed to open " + URANDOMFILE + " for reading", e);
+                        throw new SecurityException("Failed to open " + URANDOM_FILE + " for reading", e);
                     }
                 }
                 return sUrandomIn;
@@ -290,7 +290,7 @@ public final class PRNGFixes {
         private OutputStream getUrandomOutputStream() throws IOException {
             synchronized (sLock) {
                 if (sUrandomOut == null) {
-                    sUrandomOut = new FileOutputStream(URANDOMFILE);
+                    sUrandomOut = new FileOutputStream(URANDOM_FILE);
                 }
                 return sUrandomOut;
             }

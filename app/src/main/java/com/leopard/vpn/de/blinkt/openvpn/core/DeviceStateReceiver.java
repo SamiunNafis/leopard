@@ -24,11 +24,11 @@ import static de.blinkt.openvpn.core.OpenVPNManagement.pauseReason;
 public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountListener, OpenVPNManagement.PausedStateCallback {
     private final Handler mDisconnectHandler;
     // Window time in s
-    private final int TRAFFICWINDOW = 60;
+    private final int TRAFFIC_WINDOW = 60;
     // Data traffic limit in bytes
-    private final long TRAFFICLIMIT = 64 * 1024;
+    private final long TRAFFIC_LIMIT = 64 * 1024;
     // Time to wait after network disconnect to pause the VPN
-    private final int DISCONNECTWAIT = 20;
+    private final int DISCONNECT_WAIT = 20;
     connectState network = connectState.DISCONNECTED;
     connectState screen = connectState.SHOULDBECONNECTED;
     connectState userpause = connectState.SHOULDBECONNECTED;
@@ -69,15 +69,15 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
         if (screen != connectState.PENDINGDISCONNECT) return;
         long total = diffIn + diffOut;
         trafficdata.add(new Datapoint(System.currentTimeMillis(), total));
-        while (trafficdata.getFirst().timestamp <= (System.currentTimeMillis() - TRAFFICWINDOW * 1000)) {
+        while (trafficdata.getFirst().timestamp <= (System.currentTimeMillis() - TRAFFIC_WINDOW * 1000)) {
             trafficdata.removeFirst();
         }
         long windowtraffic = 0;
         for (Datapoint dp : trafficdata)
             windowtraffic += dp.data;
-        if (windowtraffic < TRAFFICLIMIT) {
+        if (windowtraffic < TRAFFIC_LIMIT) {
             screen = connectState.DISCONNECTED;
-            VpnStatus.logInfo(R.string.screenoffpause, "64 kB", TRAFFICWINDOW);
+            VpnStatus.logInfo(R.string.screenoff_pause, "64 kB", TRAFFIC_WINDOW);
             mManagement.pause(getPauseReason());
         }
     }
@@ -105,7 +105,7 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
         } else if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
             boolean screenOffPause = prefs.getBoolean("screenoff", false);
             if (screenOffPause) {
-                if (ProfileManager.getLastConnectedVpn() != null && !ProfileManager.getLastConnectedVpn().mPersistTun) VpnStatus.logError(R.string.screennopersistenttun);
+                if (ProfileManager.getLastConnectedVpn() != null && !ProfileManager.getLastConnectedVpn().mPersistTun) VpnStatus.logError(R.string.screen_nopersistenttun);
                 screen = connectState.PENDINGDISCONNECT;
                 fillTrafficData();
                 if (network == connectState.DISCONNECTED || userpause == connectState.DISCONNECTED) screen = connectState.DISCONNECTED;
@@ -124,7 +124,7 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
     }
 
     private void fillTrafficData() {
-        trafficdata.add(new Datapoint(System.currentTimeMillis(), TRAFFICLIMIT));
+        trafficdata.add(new Datapoint(System.currentTimeMillis(), TRAFFIC_LIMIT));
     }
 
     public void networkStateChange(Context context) {
@@ -140,8 +140,8 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
             String extrainfo = networkInfo.getExtraInfo();
             if (extrainfo == null) extrainfo = "";
             /*
-            if(networkInfo.getType()==android.net.ConnectivityManager.TYPEWIFI) {
-				WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFISERVICE);
+            if(networkInfo.getType()==android.net.ConnectivityManager.TYPE_WIFI) {
+				WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 				WifiInfo wifiinfo = wifiMgr.getConnectionInfo();
 				extrainfo+=wifiinfo.getBSSID();
 				subtype += wifiinfo.getNetworkId();
@@ -175,7 +175,7 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
             lastNetwork = -1;
             if (sendusr1) {
                 network = connectState.PENDINGDISCONNECT;
-                mDisconnectHandler.postDelayed(mDelayDisconnectRunnable, DISCONNECTWAIT * 1000);
+                mDisconnectHandler.postDelayed(mDelayDisconnectRunnable, DISCONNECT_WAIT * 1000);
             }
         }
         if (!netstatestring.equals(lastStateMsg)) VpnStatus.logInfo(R.string.netstatus, netstatestring);

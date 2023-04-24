@@ -23,12 +23,12 @@ import java.util.Locale;
  * Created by arne on 23.01.16.
  */
 class LogFileHandler extends Handler {
-    public static final int LOGMESSAGE = 103;
-    public static final int MAGICBYTE = 0x55;
-    public static final String LOGFILENAME = "logcache.dat";
-    static final int TRIMLOGFILE = 100;
-    static final int FLUSHTODISK = 101;
-    static final int LOGINIT = 102;
+    public static final int LOG_MESSAGE = 103;
+    public static final int MAGIC_BYTE = 0x55;
+    public static final String LOGFILE_NAME = "logcache.dat";
+    static final int TRIM_LOG_FILE = 100;
+    static final int FLUSH_TO_DISK = 101;
+    static final int LOG_INIT = 102;
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
     protected OutputStream mLogFile;
     public LogFileHandler(Looper looper) {
@@ -47,21 +47,21 @@ class LogFileHandler extends Handler {
     @Override
     public void handleMessage(Message msg) {
         try {
-            if (msg.what == LOGINIT) {
+            if (msg.what == LOG_INIT) {
                 if (mLogFile != null)
                     throw new RuntimeException("mLogFile not null");
                 readLogCache((File) msg.obj);
                 openLogFile((File) msg.obj);
-            } else if (msg.what == LOGMESSAGE && msg.obj instanceof LogItem) {
+            } else if (msg.what == LOG_MESSAGE && msg.obj instanceof LogItem) {
                 // Ignore log messages if not yet initialized
                 if (mLogFile == null)
                     return;
                 writeLogItemToDisk((LogItem) msg.obj);
-            } else if (msg.what == TRIMLOGFILE) {
+            } else if (msg.what == TRIM_LOG_FILE) {
                 trimLogFile();
                 for (LogItem li : VpnStatus.getlogbuffer())
                     writeLogItemToDisk(li);
-            } else if (msg.what == FLUSHTODISK) {
+            } else if (msg.what == FLUSH_TO_DISK) {
                 flushToDisk();
             }
         } catch (IOException | BufferOverflowException e) {
@@ -90,32 +90,32 @@ class LogFileHandler extends Handler {
     public void writeEscapedBytes(byte[] bytes) throws IOException {
         int magic = 0;
         for (byte b : bytes)
-            if (b == MAGICBYTE || b == MAGICBYTE + 1)
+            if (b == MAGIC_BYTE || b == MAGIC_BYTE + 1)
                 magic++;
         byte eBytes[] = new byte[bytes.length + magic];
         int i = 0;
         for (byte b : bytes) {
-            if (b == MAGICBYTE || b == MAGICBYTE + 1) {
-                eBytes[i++] = MAGICBYTE + 1;
-                eBytes[i++] = (byte) (b - MAGICBYTE);
+            if (b == MAGIC_BYTE || b == MAGIC_BYTE + 1) {
+                eBytes[i++] = MAGIC_BYTE + 1;
+                eBytes[i++] = (byte) (b - MAGIC_BYTE);
             } else {
                 eBytes[i++] = b;
             }
         }
         byte[] lenBytes = ByteBuffer.allocate(4).putInt(bytes.length).array();
         synchronized (mLogFile) {
-            mLogFile.write(MAGICBYTE);
+            mLogFile.write(MAGIC_BYTE);
             mLogFile.write(lenBytes);
             mLogFile.write(eBytes);
         }
     }
     private void openLogFile(File cacheDir) throws FileNotFoundException {
-        File logfile = new File(cacheDir, LOGFILENAME);
+        File logfile = new File(cacheDir, LOGFILE_NAME);
         mLogFile = new FileOutputStream(logfile);
     }
     private void readLogCache(File cacheDir) {
         try {
-            File logfile = new File(cacheDir, LOGFILENAME);
+            File logfile = new File(cacheDir, LOGFILE_NAME);
             if (!logfile.exists() || !logfile.canRead())
                 return;
             readCacheContents(new FileInputStream(logfile));
@@ -139,7 +139,7 @@ class LogFileHandler extends Handler {
         readloop:
         while (read >= 5) {
             int skipped = 0;
-            while (buf[skipped] != MAGICBYTE) {
+            while (buf[skipped] != MAGIC_BYTE) {
                 skipped++;
                 if (!(logFile.read(buf, skipped + 4, 1) == 1) || skipped + 10 > buf.length) {
                     VpnStatus.logDebug(String.format(Locale.US, "Skipped %d bytes and no a magic byte found", skipped));
@@ -154,16 +154,16 @@ class LogFileHandler extends Handler {
             byte buf2[] = new byte[buf.length];
             while (pos < len) {
                 byte b = (byte) logFile.read();
-                if (b == MAGICBYTE) {
+                if (b == MAGIC_BYTE) {
                     VpnStatus.logDebug(String.format(Locale.US, "Unexpected magic byte found at pos %d, abort current log item", pos));
                     read = logFile.read(buf, 1, 4) + 1;
                     continue readloop;
-                } else if (b == MAGICBYTE + 1) {
+                } else if (b == MAGIC_BYTE + 1) {
                     b = (byte) logFile.read();
                     if (b == 0)
-                        b = MAGICBYTE;
+                        b = MAGIC_BYTE;
                     else if (b == 1)
-                        b = MAGICBYTE + 1;
+                        b = MAGIC_BYTE + 1;
                     else {
                         VpnStatus.logDebug(String.format(Locale.US, "Escaped byte not 0 or 1: %d", b));
                         read = logFile.read(buf, 1, 4) + 1;
@@ -181,7 +181,7 @@ class LogFileHandler extends Handler {
                 read = 0;
             }
         }
-        VpnStatus.logDebug(R.string.rereadlog, itemsRead);
+        VpnStatus.logDebug(R.string.reread_log, itemsRead);
     }
     protected void restoreLogItem(byte[] buf, int len) throws UnsupportedEncodingException {
         LogItem li = new LogItem(buf, len);

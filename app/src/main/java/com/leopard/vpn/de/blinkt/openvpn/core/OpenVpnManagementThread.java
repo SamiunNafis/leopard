@@ -226,7 +226,7 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
                 case "LOG":
                     processLogMessage(argument);
                     break;
-                case "RSASIGN":
+                case "RSA_SIGN":
                     processSignCommand(argument);
                     break;
                 default:
@@ -293,10 +293,10 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
         mWaitingForRelease = true;
         int waittime = Integer.parseInt(argument.split(":")[1]);
         if (shouldBeRunning()) {
-            if (waittime > 1) VpnStatus.updateStateString("CONNECTRETRY", String.valueOf(waittime), R.string.statewaitconnectretry, ConnectionStatus.LEVELCONNECTINGNOSERVERREPLYYET);
+            if (waittime > 1) VpnStatus.updateStateString("CONNECTRETRY", String.valueOf(waittime), R.string.state_waitconnectretry, ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET);
             mResumeHandler.postDelayed(mResumeHoldRunnable, waittime * 1000);
-            if (waittime > 5) VpnStatus.logInfo(R.string.statewaitconnectretry, String.valueOf(waittime));
-            else VpnStatus.logDebug(R.string.statewaitconnectretry, String.valueOf(waittime));
+            if (waittime > 5) VpnStatus.logInfo(R.string.state_waitconnectretry, String.valueOf(waittime));
+            else VpnStatus.logDebug(R.string.state_waitconnectretry, String.valueOf(waittime));
         } else {
             VpnStatus.updateStatePause(lastPauseReason);
         }
@@ -333,7 +333,7 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
         }
         if (proxyaddr instanceof InetSocketAddress) {
             InetSocketAddress isa = (InetSocketAddress) proxyaddr;
-            VpnStatus.logInfo(R.string.usingproxy, isa.getHostName(), isa.getPort());
+            VpnStatus.logInfo(R.string.using_proxy, isa.getHostName(), isa.getPort());
             String proxycmd = String.format(Locale.ENGLISH, "proxy HTTP %s %d\n", isa.getHostName(), isa.getPort());
             managmentCommand(proxycmd);
         } else {
@@ -349,7 +349,7 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
     }
 
     private void processByteCount(String argument) {
-        //   >BYTECOUNT:{BYTESIN},{BYTESOUT}
+        //   >BYTECOUNT:{BYTES_IN},{BYTES_OUT}
         int comma = argument.indexOf(',');
         long in = Long.parseLong(argument.substring(0, comma));
         long out = Long.parseLong(argument.substring(comma + 1));
@@ -377,9 +377,9 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
             case "ROUTE": {
                 String[] routeparts = extra.split(" ");
             /*
-            bufprintf (&out, "%s %s %s dev %s", network, netmask, gateway, rgi->iface);
+            buf_printf (&out, "%s %s %s dev %s", network, netmask, gateway, rgi->iface);
             else
-            bufprintf (&out, "%s %s %s", network, netmask, gateway);
+            buf_printf (&out, "%s %s %s", network, netmask, gateway);
             */
                 if (routeparts.length == 5) {
                     if (BuildConfig.DEBUG) Assert.assertEquals("dev", routeparts[3]);
@@ -404,7 +404,7 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
             case "IFCONFIG6":
                 mOpenVPNService.setLocalIPv6(extra);
                 break;
-            case "PERSISTTUNACTION":
+            case "PERSIST_TUN_ACTION":
                 // check if tun cfg stayed the same
                 status = mOpenVPNService.getTunReopenStatus();
                 break;
@@ -486,7 +486,7 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
     }
 
     private void proccessPWFailed(String needed, String args) {
-        VpnStatus.updateStateString("AUTHFAILED", needed + args, R.string.stateauthfailed, ConnectionStatus.LEVELAUTHFAILED);
+        VpnStatus.updateStateString("AUTH_FAILED", needed + args, R.string.state_auth_failed, ConnectionStatus.LEVEL_AUTH_FAILED);
     }
 
     @Override
@@ -516,15 +516,15 @@ public class OpenVpnManagementThread implements Runnable, OpenVPNManagement {
     }
 
     private void processSignCommand(String b64data) {
-        String signedstring = mProfile.getSignedData(b64data);
-        if (signedstring == null) {
+        String signed_string = mProfile.getSignedData(b64data);
+        if (signed_string == null) {
             managmentCommand("rsa-sig\n");
             managmentCommand("\nEND\n");
             stopOpenVPN();
             return;
         }
         managmentCommand("rsa-sig\n");
-        managmentCommand(signedstring);
+        managmentCommand(signed_string);
         managmentCommand("\nEND\n");
     }
 

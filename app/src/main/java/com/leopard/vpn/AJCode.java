@@ -10,7 +10,7 @@ import android.view.Gravity;
 public class AJCode{
 
 public static void setBackgroundGradient(View view, int color1, int color2){
-GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.BLTR, new int[] {color1,color2});
+GradientDrawable gd = new GradientDrawable(GradientDrawable.Orientation.BL_TR, new int[] {color1,color2});
 view.setBackgroundDrawable(gd);
 }
 

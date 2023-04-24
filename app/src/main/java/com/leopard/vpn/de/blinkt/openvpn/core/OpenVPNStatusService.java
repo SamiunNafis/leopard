@@ -24,10 +24,10 @@ public class OpenVPNStatusService extends Service implements VpnStatus.LogListen
     static final RemoteCallbackList<IStatusCallbacks> mCallbacks =
             new RemoteCallbackList<>();
     private static final OpenVPNStatusHandler mHandler = new OpenVPNStatusHandler();
-    private static final int SENDNEWLOGITEM = 100;
-    private static final int SENDNEWSTATE = 101;
-    private static final int SENDNEWBYTECOUNT = 102;
-    private static final int SENDNEWCONNECTEDVPN = 103;
+    private static final int SEND_NEW_LOGITEM = 100;
+    private static final int SEND_NEW_STATE = 101;
+    private static final int SEND_NEW_BYTECOUNT = 102;
+    private static final int SEND_NEW_CONNECTED_VPN = 103;
     static UpdateMessage mLastUpdateMessage;
     private static final IServiceStatus.Stub mBinder = new IServiceStatus.Stub() {
         @Override
@@ -68,7 +68,7 @@ public class OpenVPNStatusService extends Service implements VpnStatus.LogListen
                 return pipe[0];
             } catch (IOException e) {
                 e.printStackTrace();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICECREAMSANDWICHMR1) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     throw new RemoteException(e.getMessage());
                 }
                 return null;
@@ -118,23 +118,23 @@ public class OpenVPNStatusService extends Service implements VpnStatus.LogListen
     }
     @Override
     public void newLog(LogItem logItem) {
-        Message msg = mHandler.obtainMessage(SENDNEWLOGITEM, logItem);
+        Message msg = mHandler.obtainMessage(SEND_NEW_LOGITEM, logItem);
         msg.sendToTarget();
     }
     @Override
     public void updateByteCount(long in, long out, long diffIn, long diffOut) {
-        Message msg = mHandler.obtainMessage(SENDNEWBYTECOUNT, Pair.create(in, out));
+        Message msg = mHandler.obtainMessage(SEND_NEW_BYTECOUNT, Pair.create(in, out));
         msg.sendToTarget();
     }
     @Override
     public void updateState(String state, String logmessage, int localizedResId, ConnectionStatus level) {
         mLastUpdateMessage = new UpdateMessage(state, logmessage, localizedResId, level);
-        Message msg = mHandler.obtainMessage(SENDNEWSTATE, mLastUpdateMessage);
+        Message msg = mHandler.obtainMessage(SEND_NEW_STATE, mLastUpdateMessage);
         msg.sendToTarget();
     }
     @Override
     public void setConnectedVPN(String uuid) {
-        Message msg = mHandler.obtainMessage(SENDNEWCONNECTEDVPN, uuid);
+        Message msg = mHandler.obtainMessage(SEND_NEW_CONNECTED_VPN, uuid);
         msg.sendToTarget();
     }
     static class UpdateMessage {
@@ -166,17 +166,17 @@ public class OpenVPNStatusService extends Service implements VpnStatus.LogListen
                 try {
                     IStatusCallbacks broadcastItem = callbacks.getBroadcastItem(i);
                     switch (msg.what) {
-                        case SENDNEWLOGITEM:
+                        case SEND_NEW_LOGITEM:
                             broadcastItem.newLogItem((LogItem) msg.obj);
                             break;
-                        case SENDNEWBYTECOUNT:
+                        case SEND_NEW_BYTECOUNT:
                             Pair<Long, Long> inout = (Pair<Long, Long>) msg.obj;
                             broadcastItem.updateByteCount(inout.first, inout.second);
                             break;
-                        case SENDNEWSTATE:
+                        case SEND_NEW_STATE:
                             sendUpdate(broadcastItem, (UpdateMessage) msg.obj);
                             break;
-                        case SENDNEWCONNECTEDVPN:
+                        case SEND_NEW_CONNECTED_VPN:
                             broadcastItem.connectedVPN((String) msg.obj);
                             break;
                     }

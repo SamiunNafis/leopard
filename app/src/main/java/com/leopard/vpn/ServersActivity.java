@@ -1,48 +1,66 @@
 package com.leopard.vpn;
 
+import android.animation.*;
+import android.app.*;
 import android.app.Activity;
-import android.content.Context;
+import android.content.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.res.*;
+import android.graphics.*;
+import android.graphics.drawable.*;
+import android.media.*;
+import android.net.*;
 import android.net.Uri;
-import android.os.Build;
+import android.os.*;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.text.*;
+import android.text.style.*;
+import android.util.*;
+import android.view.*;
+import android.view.View.*;
+import android.view.animation.*;
+import android.webkit.*;
+import android.widget.*;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import androidx.annotation.*;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.OnAdapterChangeListener;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.firebase.FirebaseApp;
+import com.sanojpunchihewa.glowbutton.*;
+import java.io.*;
+import java.io.InputStream;
+import java.text.*;
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.regex.*;
+import junit.*;
+import org.json.*;
 
 public class ServersActivity extends AppCompatActivity {
 
     private double n = 0;
-    private String serverurl = "";
+    private String server_url = "";
     private String FNAME = "";
 
     private ArrayList<HashMap<String, Object>> listmap1 = new ArrayList<>();
@@ -62,10 +80,10 @@ public class ServersActivity extends AppCompatActivity {
     private FragAdapterFragmentAdapter fragAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle _savedInstanceState) {
+        super.onCreate(_savedInstanceState);
         setContentView(R.layout.servers);
-        initialize(savedInstanceState);
+        initialize(_savedInstanceState);
         FirebaseApp.initializeApp(this);
         MobileAds.initialize(this);
 
@@ -74,7 +92,7 @@ public class ServersActivity extends AppCompatActivity {
         initializeLogic();
     }
 
-    private void initialize(Bundle savedInstanceState) {
+    private void initialize(Bundle _savedInstanceState) {
         base = findViewById(R.id.base);
         swiperefreshlayout1 = findViewById(R.id.swiperefreshlayout1);
         linear2 = findViewById(R.id.linear2);
@@ -99,18 +117,18 @@ public class ServersActivity extends AppCompatActivity {
 
     private void initializeLogic() {
         try{
-            removeScollBar(listview1);
-            setListviewSelector(listview1);
+            _removeScollBar(listview1);
+            _setListviewSelector(listview1);
             /*getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#0B2447")));
-             toolbar.setTitleTextColor(Color.WHITE);
-             getSupportActionBar().setHomeAsUpIndicator(R.drawable.icbackwhite); 
-             for(int i = 0; i < toolbar.getChildCount(); i++)     
-             { View view = toolbar.getChildAt(i);
+             _toolbar.setTitleTextColor(Color.WHITE);
+             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_white); 
+             for(int i = 0; i < _toolbar.getChildCount(); i++)     
+             { View view = _toolbar.getChildAt(i);
 
              if(view instanceof TextView) {
              TextView textView = (TextView) view;
 
-             Typeface myCustomFont=Typeface.createFromAsset(getAssets(),"fonts/manropebold.otf");
+             Typeface myCustomFont=Typeface.createFromAsset(getAssets(),"fonts/manrope_bold.otf");
              textView.setTypeface(myCustomFont); 
              }
 
@@ -122,11 +140,11 @@ public class ServersActivity extends AppCompatActivity {
             tablayout2.setupWithViewPager(viewpager1);
             tablayout2.setInlineLabel(true);
             tablayout2.setTabTextColors(0xFFFFFFFF, 0xFFFFFFFF);
-            tablayout2.setTabRippleColor(new android.content.res.ColorStateList(new int[][]{new int[]{android.R.attr.statepressed}}, 
+            tablayout2.setTabRippleColor(new android.content.res.ColorStateList(new int[][]{new int[]{android.R.attr.state_pressed}}, 
 
                                                                                 new int[] {0xFF9E9E9E}));
             tablayout2.setSelectedTabIndicatorColor(0xFFFFFFFF);
-            textview1.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/manropebold.otf"), 1);
+            textview1.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/manrope_bold.otf"), 1);
         }catch(Exception e){
 
         }
@@ -153,192 +171,142 @@ public class ServersActivity extends AppCompatActivity {
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            if (position == 0) {
+        public CharSequence getPageTitle(int _position) {
+            if (_position == 0) {
                 return "FREE";
             }
-            if (position == 1) {
+            if (_position == 1) {
                 return "VIP";
             }
             return null;
         }
 
         @Override
-        public Fragment getItem(int position) {
-            if (position == 0) {
+        public Fragment getItem(int _position) {
+            if (_position == 0) {
                 return new FreeFragmentActivity();
             }
-            if (position == 1) {
+            if (_position == 1) {
                 return new ProFragmentActivity();
             }
             return null;
         }
     }
 
-    public void textview(final TextView t, final String s) {
-        FNAME = "fonts/".concat(s.concat(".otf"));
+    public void _textview(final TextView _t, final String _s) {
+        FNAME = "fonts/".concat(_s.concat(".otf"));
         try{
-            t.setTypeface(Typeface.createFromAsset(getAssets(), FNAME), 0);
+            _t.setTypeface(Typeface.createFromAsset(getAssets(), FNAME), 0);
         }catch(Exception e){
             SamiunUtil.showMessage(getApplicationContext(), "Error!");
         }
     }
 
 
-    public void removeScollBar(final View view) {
-        view.setVerticalScrollBarEnabled(false);
+    public void _removeScollBar(final View _view) {
+        _view.setVerticalScrollBarEnabled(false);
     }
 
 
-    public void setListviewSelector(final ListView l) {
-        l.setSelector(android.R.color.transparent);
+    public void _setListviewSelector(final ListView _l) {
+        _l.setSelector(android.R.color.transparent);
     }
 
 
-    public void transferDataToHone(final String name, final String url, final String icon) {
+    public void _transferDataToHone(final String _name, final String _url, final String _icon) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("title", name);
-        returnIntent.putExtra("icon", icon);
-        returnIntent.putExtra("url", url);
-        setResult(RESULTOK, returnIntent);
+        returnIntent.putExtra("title", _name);
+        returnIntent.putExtra("icon", _icon);
+        returnIntent.putExtra("url", _url);
+        setResult(RESULT_OK, returnIntent);
         finish();
-        ConnectionManagement.edit().putString("name", name).commit();
-        ConnectionManagement.edit().putString("link", url).commit();
-        ConnectionManagement.edit().putString("icon", icon).commit();
+        ConnectionManagement.edit().putString("name", _name).commit();
+        ConnectionManagement.edit().putString("link", _url).commit();
+        ConnectionManagement.edit().putString("icon", _icon).commit();
     }
 
 
-    public void NavStatusBarColor(final String color1, final String color2) {
+    public void _NavStatusBarColor(final String _color1, final String _color2) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            Window w = this.getWindow();    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BARBACKGROUNDS);
-            w.setStatusBarColor(Color.parseColor("#" + color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + color2.replace("#", "")));
+            Window w = this.getWindow();    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            w.setStatusBarColor(Color.parseColor("#" + _color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + _color2.replace("#", "")));
         }
     }
 
 
-    public void DARKICONS() {
-        /*getWindow().getDecorView().setSystemUiVisibility(View.SYSTEMUIFLAGDARKSTATUSBAR);
-         base.setSystemUiVisibility(View.SYSTEMUIFLAGDARKNAVIGATIONBAR);*/
+    public void _DARK_ICONS() {
+        /*getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_DARK_STATUS_BAR);
+         base.setSystemUiVisibility(View.SYSTEM_UI_FLAG_DARK_NAVIGATION_BAR);*/
     }
 
     public class Listview1Adapter extends BaseAdapter {
 
-        ArrayList<HashMap<String, Object>> data;
+        ArrayList<HashMap<String, Object>> _data;
 
-        public Listview1Adapter(ArrayList<HashMap<String, Object>> arr) {
-            data = arr;
+        public Listview1Adapter(ArrayList<HashMap<String, Object>> _arr) {
+            _data = _arr;
         }
 
         @Override
         public int getCount() {
-            return data.size();
+            return _data.size();
         }
 
         @Override
-        public HashMap<String, Object> getItem(int index) {
-            return data.get(index);
+        public HashMap<String, Object> getItem(int _index) {
+            return _data.get(_index);
         }
 
         @Override
-        public long getItemId(int index) {
-            return index;
+        public long getItemId(int _index) {
+            return _index;
         }
 
         @Override
-        public View getView(final int position, View v, ViewGroup container) {
-            LayoutInflater inflater = getLayoutInflater();
-            View view = v;
-            if (view == null) {
-                view = inflater.inflate(R.layout.datacus, null);
+        public View getView(final int _position, View _v, ViewGroup _container) {
+            LayoutInflater _inflater = getLayoutInflater();
+            View _view = _v;
+            if (_view == null) {
+                _view = _inflater.inflate(R.layout.data_cus, null);
             }
 
-            final LinearLayout container = view.findViewById(R.id.container);
-            final de.hdodenhof.circleimageview.CircleImageView servericon = view.findViewById(R.id.servericon);
-            final TextView title = view.findViewById(R.id.title);
-            final ImageView imageview1 = view.findViewById(R.id.imageview1);
-            final ImageView condition = view.findViewById(R.id.condition);
+            final LinearLayout container = _view.findViewById(R.id.container);
+            final de.hdodenhof.circleimageview.CircleImageView server_icon = _view.findViewById(R.id.server_icon);
+            final TextView title = _view.findViewById(R.id.title);
+            final ImageView imageview1 = _view.findViewById(R.id.imageview1);
+            final ImageView condition = _view.findViewById(R.id.condition);
 
-            if (data.get((int)position).containsKey("title")) {
-                title.setText(data.get((int)position).get("title").toString());
+            if (_data.get((int)_position).containsKey("title")) {
+                title.setText(_data.get((int)_position).get("title").toString());
             }
-            if (data.get((int)position).containsKey("countryicon")) {
-                Glide.with(getApplicationContext()).load(Uri.parse(data.get((int)position).get("countryicon").toString())).into(servericon);
+            if (_data.get((int)_position).containsKey("country_icon")) {
+                Glide.with(getApplicationContext()).load(Uri.parse(_data.get((int)_position).get("country_icon").toString())).into(server_icon);
             }
-            if (data.get((int)position).containsKey("url")) {
-                serverurl = data.get((int)position).get("url").toString();
+            if (_data.get((int)_position).containsKey("url")) {
+                server_url = _data.get((int)_position).get("url").toString();
             }
-            if (data.get((int)position).containsKey("condition")) {
-                if (data.get((int)position).get("condition").toString().equals("true")) {
-                    condition.setImageResource(R.drawable.networkmonitor1);
+            if (_data.get((int)_position).containsKey("condition")) {
+                if (_data.get((int)_position).get("condition").toString().equals("true")) {
+                    condition.setImageResource(R.drawable.network_monitor_1);
                 }
                 else {
-                    condition.setImageResource(R.drawable.networkmonitor2);
+                    condition.setImageResource(R.drawable.network_monitor_2);
                 }
             }
             container.setOnClickListener(new View.OnClickListener(){
                     @Override
-                    public void onClick(View view){
-                        transferDataToHone(data.get((int)position).get("title").toString(), data.get((int)position).get("url").toString(), data.get((int)position).get("countryicon").toString());
+                    public void onClick(View _view){
+                        _transferDataToHone(_data.get((int)_position).get("title").toString(), _data.get((int)_position).get("url").toString(), _data.get((int)_position).get("country_icon").toString());
                     }
                 });
-            textview(title, "manropesemibold");
+            _textview(title, "manrope_semibold");
 
             android.view.animation.Animation animation = new android.view.animation.AlphaAnimation(0, 1);
             animation.setDuration(1500);
-            view.setAnimation(animation);
+            _view.setAnimation(animation);
 
-            return view;
+            return _view;
         }
-    }
-
-    @Deprecated
-    public void showMessage(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-    }
-
-    @Deprecated
-    public int getLocationX(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[0];
-    }
-
-    @Deprecated
-    public int getLocationY(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[1];
-    }
-
-    @Deprecated
-    public int getRandom(int min, int max) {
-        Random random = new Random();
-        return random.nextInt(max - min + 1) + min;
-    }
-
-    @Deprecated
-    public ArrayList<Double> getCheckedItemPositionsToArray(ListView list) {
-        ArrayList<Double> result = new ArrayList<Double>();
-        SparseBooleanArray arr = list.getCheckedItemPositions();
-        for (int iIdx = 0; iIdx < arr.size(); iIdx++) {
-            if (arr.valueAt(iIdx))
-                result.add((double)arr.keyAt(iIdx));
-        }
-        return result;
-    }
-
-    @Deprecated
-    public float getDip(int input) {
-        return TypedValue.applyDimension(TypedValue.COMPLEXUNITDIP, input, getResources().getDisplayMetrics());
-    }
-
-    @Deprecated
-    public int getDisplayWidthPixels() {
-        return getResources().getDisplayMetrics().widthPixels;
-    }
-
-    @Deprecated
-    public int getDisplayHeightPixels() {
-        return getResources().getDisplayMetrics().heightPixels;
     }
 }
+

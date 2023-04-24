@@ -21,7 +21,7 @@ import java.util.Vector;
 public class VpnStatus {
     final static java.lang.Object readFileLock = new Object();
     static final int MAXLOGENTRIES = 1000;
-    // keytool -printcert -jarfile de.blinkt.openvpn85.apk
+    // keytool -printcert -jarfile de.blinkt.openvpn_85.apk
     static final byte[] officalkey = {-58, -42, -44, -106, 90, -88, -87, -88, -52, -124, 84, 117, 66, 79, -112, -111, -46, 86, -37, 109};
     static final byte[] officaldebugkey = {-99, -69, 45, 71, 114, -116, 82, 66, -99, -122, 50, -70, -56, -111, 98, -35, -65, 105, 82, 43};
     static final byte[] amazonkey = {-116, -115, -118, -89, -116, -112, 120, 55, 79, -8, -119, -23, 106, -114, -85, -56, -4, 105, 26, -57};
@@ -34,10 +34,10 @@ public class VpnStatus {
     private static Vector<ByteCountListener> byteCountListener;
     private static String mLaststatemsg = "";
     private static String mLaststate = "NOPROCESS";
-    private static int mLastStateresid = R.string.statenoprocess;
+    private static int mLastStateresid = R.string.state_noprocess;
     private static HandlerThread mHandlerThread;
     private static String mLastConnectedVPNUUID;
-    private static ConnectionStatus mLastLevel = ConnectionStatus.LEVELNOTCONNECTED;
+    private static ConnectionStatus mLastLevel = ConnectionStatus.LEVEL_NOTCONNECTED;
     private static LogFileHandler mLogFileHandler;
 
     static {
@@ -54,9 +54,9 @@ public class VpnStatus {
         e.printStackTrace(new PrintWriter(sw));
         LogItem li;
         if (context != null) {
-            li = new LogItem(ll, R.string.unhandledexceptioncontext, e.getMessage(), sw.toString(), context);
+            li = new LogItem(ll, R.string.unhandled_exception_context, e.getMessage(), sw.toString(), context);
         } else {
-            li = new LogItem(ll, R.string.unhandledexception, e.getMessage(), sw.toString());
+            li = new LogItem(ll, R.string.unhandled_exception, e.getMessage(), sw.toString());
         }
         newLogItem(li);
     }
@@ -70,13 +70,13 @@ public class VpnStatus {
     }
 
     public static boolean isVPNActive() {
-        return mLastLevel != ConnectionStatus.LEVELAUTHFAILED && !(mLastLevel == ConnectionStatus.LEVELNOTCONNECTED);
+        return mLastLevel != ConnectionStatus.LEVEL_AUTH_FAILED && !(mLastLevel == ConnectionStatus.LEVEL_NOTCONNECTED);
     }
 
     public static String getLastCleanLogMessage(Context c) {
         String message = mLaststatemsg;
         switch (mLastLevel) {
-            case LEVELCONNECTED:
+            case LEVEL_CONNECTED:
                 String[] parts = mLaststatemsg.split(",");
                 /*
                    (a) the integer unix date/time,
@@ -97,25 +97,25 @@ public class VpnStatus {
         while (message.endsWith(",")) message = message.substring(0, message.length() - 1);
         String status = mLaststate;
         if (status.equals("NOPROCESS")) return message;
-        if (mLastStateresid == R.string.statewaitconnectretry) {
-            return c.getString(R.string.statewaitconnectretry, mLaststatemsg);
+        if (mLastStateresid == R.string.state_waitconnectretry) {
+            return c.getString(R.string.state_waitconnectretry, mLaststatemsg);
         }
         String prefix = c.getString(mLastStateresid);
-        if (mLastStateresid == R.string.unknownstate) message = status + message;
+        if (mLastStateresid == R.string.unknown_state) message = status + message;
         if (message.length() > 0) prefix += ": ";
         return prefix + message;
     }
 
     public static void initLogCache(File cacheDir) {
-        mHandlerThread = new HandlerThread("LogFileWriter", Thread.MINPRIORITY);
+        mHandlerThread = new HandlerThread("LogFileWriter", Thread.MIN_PRIORITY);
         mHandlerThread.start();
         mLogFileHandler = new LogFileHandler(mHandlerThread.getLooper());
-        Message m = mLogFileHandler.obtainMessage(LogFileHandler.LOGINIT, cacheDir);
+        Message m = mLogFileHandler.obtainMessage(LogFileHandler.LOG_INIT, cacheDir);
         mLogFileHandler.sendMessage(m);
     }
 
     public static void flushLog() {
-        if (mLogFileHandler != null) mLogFileHandler.sendEmptyMessage(LogFileHandler.FLUSHTODISK);
+        if (mLogFileHandler != null) mLogFileHandler.sendEmptyMessage(LogFileHandler.FLUSH_TO_DISK);
     }
 
     public static void setConnectedVPNProfile(String uuid) {
@@ -139,7 +139,7 @@ public class VpnStatus {
     public synchronized static void clearLog() {
         logbuffer.clear();
         logInformation();
-        if (mLogFileHandler != null) mLogFileHandler.sendEmptyMessage(LogFileHandler.TRIMLOGFILE);
+        if (mLogFileHandler != null) mLogFileHandler.sendEmptyMessage(LogFileHandler.TRIM_LOG_FILE);
     }
 
     private static void logInformation() {
@@ -149,7 +149,7 @@ public class VpnStatus {
         } catch (UnsatisfiedLinkError ignore) {
             nativeAPI = "error";
         }
-        logInfo(R.string.mobileinfo, Build.MODEL, Build.BOARD, Build.BRAND, Build.VERSION.SDK_INT, nativeAPI, Build.VERSION.RELEASE, Build.ID, Build.FINGERPRINT, "", "");
+        logInfo(R.string.mobile_info, Build.MODEL, Build.BOARD, Build.BRAND, Build.VERSION.SDK_INT, nativeAPI, Build.VERSION.RELEASE, Build.ID, Build.FINGERPRINT, "", "");
     }
 
     public synchronized static void addLogListener(LogListener ll) {
@@ -180,62 +180,62 @@ public class VpnStatus {
     private static int getLocalizedState(String state) {
         switch (state) {
             case "CONNECTING":
-                return R.string.stateconnecting;
+                return R.string.state_connecting;
             case "WAIT":
-                return R.string.statewait;
+                return R.string.state_wait;
             case "AUTH":
-                return R.string.stateauth;
-            case "GETCONFIG":
-                return R.string.stategetconfig;
-            case "ASSIGNIP":
-                return R.string.stateassignip;
-            case "ADDROUTES":
-                return R.string.stateaddroutes;
+                return R.string.state_auth;
+            case "GET_CONFIG":
+                return R.string.state_get_config;
+            case "ASSIGN_IP":
+                return R.string.state_assign_ip;
+            case "ADD_ROUTES":
+                return R.string.state_add_routes;
             case "CONNECTED":
-                return R.string.stateconnected;
+                return R.string.state_connected;
             case "DISCONNECTED":
-                return R.string.statedisconnected;
+                return R.string.state_disconnected;
             case "RECONNECTING":
-                return R.string.statereconnecting;
+                return R.string.state_reconnecting;
             case "EXITING":
-                return R.string.stateexiting;
+                return R.string.state_exiting;
             case "RESOLVE":
-                return R.string.stateresolve;
-            case "TCPCONNECT":
-                return R.string.statetcpconnect;
+                return R.string.state_resolve;
+            case "TCP_CONNECT":
+                return R.string.state_tcp_connect;
             default:
-                return R.string.unknownstate;
+                return R.string.unknown_state;
         }
     }
 
     public static void updateStatePause(OpenVPNManagement.pauseReason pauseReason) {
         switch (pauseReason) {
             case noNetwork:
-                VpnStatus.updateStateString("NONETWORK", "", R.string.statenonetwork, ConnectionStatus.LEVELNONETWORK);
+                VpnStatus.updateStateString("NONETWORK", "", R.string.state_nonetwork, ConnectionStatus.LEVEL_NONETWORK);
                 break;
             case screenOff:
-                VpnStatus.updateStateString("SCREENOFF", "", R.string.statescreenoff, ConnectionStatus.LEVELVPNPAUSED);
+                VpnStatus.updateStateString("SCREENOFF", "", R.string.state_screenoff, ConnectionStatus.LEVEL_VPNPAUSED);
                 break;
             case userPause:
-                VpnStatus.updateStateString("USERPAUSE", "", R.string.stateuserpause, ConnectionStatus.LEVELVPNPAUSED);
+                VpnStatus.updateStateString("USERPAUSE", "", R.string.state_userpause, ConnectionStatus.LEVEL_VPNPAUSED);
                 break;
         }
     }
 
     private static ConnectionStatus getLevel(String state) {
-        String[] noreplyet = {"CONNECTING", "WAIT", "RECONNECTING", "RESOLVE", "TCPCONNECT"};
-        String[] reply = {"AUTH", "GETCONFIG", "ASSIGNIP", "ADDROUTES"};
+        String[] noreplyet = {"CONNECTING", "WAIT", "RECONNECTING", "RESOLVE", "TCP_CONNECT"};
+        String[] reply = {"AUTH", "GET_CONFIG", "ASSIGN_IP", "ADD_ROUTES"};
         String[] connected = {"CONNECTED"};
         String[] notconnected = {"DISCONNECTED", "EXITING"};
         for (String x : noreplyet)
-            if (state.equals(x)) return ConnectionStatus.LEVELCONNECTINGNOSERVERREPLYYET;
+            if (state.equals(x)) return ConnectionStatus.LEVEL_CONNECTING_NO_SERVER_REPLY_YET;
         for (String x : reply)
-            if (state.equals(x)) return ConnectionStatus.LEVELCONNECTINGSERVERREPLIED;
+            if (state.equals(x)) return ConnectionStatus.LEVEL_CONNECTING_SERVER_REPLIED;
         for (String x : connected)
-            if (state.equals(x)) return ConnectionStatus.LEVELCONNECTED;
+            if (state.equals(x)) return ConnectionStatus.LEVEL_CONNECTED;
         for (String x : notconnected)
-            if (state.equals(x)) return ConnectionStatus.LEVELNOTCONNECTED;
-        return ConnectionStatus.UNKNOWNLEVEL;
+            if (state.equals(x)) return ConnectionStatus.LEVEL_NOTCONNECTED;
+        return ConnectionStatus.UNKNOWN_LEVEL;
     }
 
     public synchronized static void removeStateListener(StateListener sl) {
@@ -257,7 +257,7 @@ public class VpnStatus {
     public synchronized static void updateStateString(String state, String msg, int resid, ConnectionStatus level) {
         // Workound for OpenVPN doing AUTH and wait and being connected
         // Simply ignore these state
-        if (mLastLevel == ConnectionStatus.LEVELCONNECTED && (state.equals("WAIT") || state.equals("AUTH"))) {
+        if (mLastLevel == ConnectionStatus.LEVEL_CONNECTED && (state.equals("WAIT") || state.equals("AUTH"))) {
             newLogItem(new LogItem((LogLevel.DEBUG), String.format("Ignoring OpenVPN Status in CONNECTED state (%s->%s): %s", state, level.toString(), msg)));
             return;
         }
@@ -297,13 +297,13 @@ public class VpnStatus {
         } else {
             logbuffer.addLast(logItem);
             if (mLogFileHandler != null) {
-                Message m = mLogFileHandler.obtainMessage(LogFileHandler.LOGMESSAGE, logItem);
+                Message m = mLogFileHandler.obtainMessage(LogFileHandler.LOG_MESSAGE, logItem);
                 mLogFileHandler.sendMessage(m);
             }
         }
         if (logbuffer.size() > MAXLOGENTRIES + MAXLOGENTRIES / 2) {
             while (logbuffer.size() > MAXLOGENTRIES) logbuffer.removeFirst();
-            if (mLogFileHandler != null) mLogFileHandler.sendMessage(mLogFileHandler.obtainMessage(LogFileHandler.TRIMLOGFILE));
+            if (mLogFileHandler != null) mLogFileHandler.sendMessage(mLogFileHandler.obtainMessage(LogFileHandler.TRIM_LOG_FILE));
         }
         //if (BuildConfig.DEBUG && !cachedLine && !BuildConfig.FLAVOR.equals("test"))
         //    Log.d("OpenVPN", logItem.getString(null));

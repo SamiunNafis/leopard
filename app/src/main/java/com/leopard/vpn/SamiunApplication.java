@@ -27,7 +27,7 @@ public class SamiunApplication extends Application {
                 @Override
                 public void uncaughtException(Thread thread, Throwable throwable) {
                     Intent intent = new Intent(getApplicationContext(), DebugActivity.class);
-                    intent.setFlags(Intent.FLAGACTIVITYCLEARTASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("error", Log.getStackTraceString(throwable));
 
                     PendingIntent pendingIntent =
@@ -35,11 +35,11 @@ public class SamiunApplication extends Application {
                             getApplicationContext(),
                             11111,
                             intent,
-                            PendingIntent.FLAGONESHOT
+                            PendingIntent.FLAG_ONE_SHOT
                         );
 
-                    AlarmManager am = (AlarmManager) getSystemService(Context.ALARMSERVICE);
-                    am.set(AlarmManager.ELAPSEDREALTIMEWAKEUP, 1000, pendingIntent);
+                    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, pendingIntent);
 
                   //  SketchLogger.broadcastLog(Log.getStackTraceString(throwable));
                     Process.killProcess(Process.myPid());

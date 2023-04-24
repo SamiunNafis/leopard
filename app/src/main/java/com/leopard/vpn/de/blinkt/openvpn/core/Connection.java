@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import java.io.Serializable;
 import java.util.Locale;
 public class Connection implements Serializable, Cloneable {
-    public static final int CONNECTIONDEFAULTTIMEOUT = 120;
+    public static final int CONNECTION_DEFAULT_TIMEOUT = 120;
     private static final long serialVersionUID = 92031902903829089L;
     public String mServerName = "openvpn.example.com";
     public String mServerPort = "1194";
@@ -44,7 +44,7 @@ public class Connection implements Serializable, Cloneable {
     }
     public int getTimeout() {
         if (mConnectTimeout <= 0)
-            return CONNECTIONDEFAULTTIMEOUT;
+            return CONNECTION_DEFAULT_TIMEOUT;
         else
             return mConnectTimeout;
     }

@@ -25,8 +25,8 @@ class CIDRIP {
             len = 32 - lenZeros;
         }
     }
-    public CIDRIP(String address, int prefixlength) {
-        len = prefixlength;
+    public CIDRIP(String address, int prefix_length) {
+        len = prefix_length;
         mIp = address;
     }
     static long getInt(String ipaddr) {

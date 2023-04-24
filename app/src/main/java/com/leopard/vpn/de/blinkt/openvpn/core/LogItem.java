@@ -240,7 +240,7 @@ public class LogItem implements Parcelable {
                 return mMessage;
             } else {
                 if (c != null) {
-                    if (mRessourceId == R.string.mobileinfo) return getMobileInfoString(c);
+                    if (mRessourceId == R.string.mobile_info) return getMobileInfoString(c);
                     if (mArgs == null) return c.getString(mRessourceId);
                     else return c.getString(mRessourceId, mArgs);
                 } else {
@@ -281,11 +281,11 @@ public class LogItem implements Parcelable {
             byte[] der = cert.getEncoded();
             md.update(der);
             byte[] digest = md.digest();
-            if (Arrays.equals(digest, VpnStatus.officalkey)) apksign = c.getString(R.string.officialbuild);
-            else if (Arrays.equals(digest, VpnStatus.officaldebugkey)) apksign = c.getString(R.string.debugbuild);
+            if (Arrays.equals(digest, VpnStatus.officalkey)) apksign = c.getString(R.string.official_build);
+            else if (Arrays.equals(digest, VpnStatus.officaldebugkey)) apksign = c.getString(R.string.debug_build);
             else if (Arrays.equals(digest, VpnStatus.amazonkey)) apksign = "amazon version";
             else if (Arrays.equals(digest, VpnStatus.fdroidkey)) apksign = "F-Droid built and signed version";
-            else apksign = c.getString(R.string.builtby, cert.getSubjectX500Principal().getName());
+            else apksign = c.getString(R.string.built_by, cert.getSubjectX500Principal().getName());
             PackageInfo packageinfo = c.getPackageManager().getPackageInfo(c.getPackageName(), 0);
             version = packageinfo.versionName;
         } catch (PackageManager.NameNotFoundException | CertificateException | NoSuchAlgorithmException ignored) {
@@ -293,7 +293,7 @@ public class LogItem implements Parcelable {
         Object[] argsext = Arrays.copyOf(mArgs, mArgs.length);
         argsext[argsext.length - 1] = apksign;
         argsext[argsext.length - 2] = version;
-        return c.getString(R.string.mobileinfo, argsext);
+        return c.getString(R.string.mobile_info, argsext);
     }
 
     public long getLogtime() {

@@ -56,9 +56,10 @@ import junit.*;
 import org.json.*;
 import android.database.DataSetObserver;
 
+
 public class PurchaseActivity extends AppCompatActivity {
 
-    private FirebaseDatabase firebase = FirebaseDatabase.getInstance();
+    private FirebaseDatabase _firebase = FirebaseDatabase.getInstance();
 
     private double number = 0;
     private HashMap<String, Object> mapp = new HashMap<>();
@@ -81,14 +82,14 @@ public class PurchaseActivity extends AppCompatActivity {
     private ListView listview1;
 
     private Intent intent = new Intent();
-    private DatabaseReference fdb = firebase.getReference("offers/features");
-    private ChildEventListener fdbchildlistener;
+    private DatabaseReference fdb = _firebase.getReference("offers/features");
+    private ChildEventListener _fdb_child_listener;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle _savedInstanceState) {
+        super.onCreate(_savedInstanceState);
         setContentView(R.layout.purchase);
-        initialize(savedInstanceState);
+        initialize(_savedInstanceState);
         FirebaseApp.initializeApp(this);
         MobileAds.initialize(this);
 
@@ -97,7 +98,7 @@ public class PurchaseActivity extends AppCompatActivity {
         initializeLogic();
     }
 
-    private void initialize(Bundle savedInstanceState) {
+    private void initialize(Bundle _savedInstanceState) {
         linear1 = findViewById(R.id.linear1);
         RelativeLayout = findViewById(R.id.RelativeLayout);
         layout1 = findViewById(R.id.layout1);
@@ -113,100 +114,100 @@ public class PurchaseActivity extends AppCompatActivity {
 
         imageview1.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View _view) {
                     finish();
                 }
             });
 
-        fdbchildlistener = new ChildEventListener() {
+        _fdb_child_listener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot param1, String param2) {
-                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                final String childKey = param1.getKey();
-                final HashMap<String, Object> childValue = param1.getValue(ind);
+            public void onChildAdded(DataSnapshot _param1, String _param2) {
+                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                final String _childKey = _param1.getKey();
+                final HashMap<String, Object> _childValue = _param1.getValue(_ind);
                 fdb.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void onDataChange(DataSnapshot _dataSnapshot) {
                             lmap = new ArrayList<>();
                             try {
-                                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    HashMap<String, Object> map = data.getValue(ind);
-                                    lmap.add(map);
+                                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                                for (DataSnapshot _data : _dataSnapshot.getChildren()) {
+                                    HashMap<String, Object> _map = _data.getValue(_ind);
+                                    lmap.add(_map);
                                 }
                             }
-                            catch (Exception e) {
-                                e.printStackTrace();
+                            catch (Exception _e) {
+                                _e.printStackTrace();
                             }
                             listview1.setAdapter(new Listview1Adapter(lmap));
                             ((BaseAdapter)listview1.getAdapter()).notifyDataSetChanged();
                         }
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(DatabaseError _databaseError) {
                         }
                     });
             }
 
             @Override
-            public void onChildChanged(DataSnapshot param1, String param2) {
-                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                final String childKey = param1.getKey();
-                final HashMap<String, Object> childValue = param1.getValue(ind);
+            public void onChildChanged(DataSnapshot _param1, String _param2) {
+                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                final String _childKey = _param1.getKey();
+                final HashMap<String, Object> _childValue = _param1.getValue(_ind);
                 fdb.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        public void onDataChange(DataSnapshot _dataSnapshot) {
                             lmap = new ArrayList<>();
                             try {
-                                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    HashMap<String, Object> map = data.getValue(ind);
-                                    lmap.add(map);
+                                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                                for (DataSnapshot _data : _dataSnapshot.getChildren()) {
+                                    HashMap<String, Object> _map = _data.getValue(_ind);
+                                    lmap.add(_map);
                                 }
                             }
-                            catch (Exception e) {
-                                e.printStackTrace();
+                            catch (Exception _e) {
+                                _e.printStackTrace();
                             }
                             listview1.setAdapter(new Listview1Adapter(lmap));
                             ((BaseAdapter)listview1.getAdapter()).notifyDataSetChanged();
                         }
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        public void onCancelled(DatabaseError _databaseError) {
                         }
                     });
             }
 
             @Override
-            public void onChildMoved(DataSnapshot param1, String param2) {
+            public void onChildMoved(DataSnapshot _param1, String _param2) {
 
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot param1) {
-                GenericTypeIndicator<HashMap<String, Object>> ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
-                final String childKey = param1.getKey();
-                final HashMap<String, Object> childValue = param1.getValue(ind);
+            public void onChildRemoved(DataSnapshot _param1) {
+                GenericTypeIndicator<HashMap<String, Object>> _ind = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                final String _childKey = _param1.getKey();
+                final HashMap<String, Object> _childValue = _param1.getValue(_ind);
 
             }
 
             @Override
-            public void onCancelled(DatabaseError param1) {
-                final int errorCode = param1.getCode();
-                final String errorMessage = param1.getMessage();
+            public void onCancelled(DatabaseError _param1) {
+                final int _errorCode = _param1.getCode();
+                final String _errorMessage = _param1.getMessage();
 
             }
         };
-        fdb.addChildEventListener(fdbchildlistener);
+        fdb.addChildEventListener(_fdb_child_listener);
     }
 
     private void initializeLogic() {
-        NavStatusBarColor("#FFFFFFFF", "#FFFFFFFF");
-        DARKICONS();
-        shape(14, 14, 0, 0, "#FFFFFF", "#FFFFFF", 0, layout3);
-        for(int repeat40 = 0; repeat40 < (int)(3); repeat40++) {
+        _NavStatusBarColor("#FFFFFFFF", "#FFFFFFFF");
+        _DARK_ICONS();
+        _shape(14, 14, 0, 0, "#FFFFFF", "#FFFFFF", 0, layout3);
+        for(int _repeat40 = 0; _repeat40 < (int)(3); _repeat40++) {
             {
-                HashMap<String, Object> item = new HashMap<>();
-                item.put("price", "Monthly ");
-                lmap2.add(item);
+                HashMap<String, Object> _item = new HashMap<>();
+                _item.put("price", "Monthly ");
+                lmap2.add(_item);
             }
 
         }
@@ -220,76 +221,76 @@ public class PurchaseActivity extends AppCompatActivity {
         }
     }
 
-    public void NavStatusBarColor(final String color1, final String color2) {
+    public void _NavStatusBarColor(final String _color1, final String _color2) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            Window w = this.getWindow();    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BARBACKGROUNDS);
-            w.setStatusBarColor(Color.parseColor("#" + color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + color2.replace("#", "")));
+            Window w = this.getWindow();    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);   w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            w.setStatusBarColor(Color.parseColor("#" + _color1.replace("#", "")));  w.setNavigationBarColor(Color.parseColor("#" + _color2.replace("#", "")));
         }
     }
 
 
-    public void DARKICONS() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEMUIFLAGLIGHTSTATUSBAR);
-        linear1.setSystemUiVisibility(View.SYSTEMUIFLAGLIGHTNAVIGATIONBAR);
+    public void _DARK_ICONS() {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        linear1.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
     }
 
 
-    public void shape(final double top1, final double top2, final double bottom2, final double bottom1, final String insidecolor, final String sidecolor, final double sidesize, final View view) {
-        Double tlr = top1;
-        Double trr = top2;
-        Double blr = bottom2;
-        Double brr = bottom1;
-        Double sw = sidesize;
+    public void _shape(final double _top1, final double _top2, final double _bottom2, final double _bottom1, final String _inside_color, final String _side_color, final double _side_size, final View _view) {
+        Double tlr = _top1;
+        Double trr = _top2;
+        Double blr = _bottom2;
+        Double brr = _bottom1;
+        Double sw = _side_size;
         android.graphics.drawable.GradientDrawable s = new android.graphics.drawable.GradientDrawable();
         s.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
         s.setCornerRadii(new float[] {tlr.floatValue(),tlr.floatValue(), trr.floatValue(),trr.floatValue(), blr.floatValue(),blr.floatValue(), brr.floatValue(),brr.floatValue()}); 
 
-        s.setColor(Color.parseColor(insidecolor));
-        s.setStroke(sw.intValue(), Color.parseColor(sidecolor));
-        view.setBackground(s);
+        s.setColor(Color.parseColor(_inside_color));
+        s.setStroke(sw.intValue(), Color.parseColor(_side_color));
+        _view.setBackground(s);
     }
 
 
-    public void IconColour(final ImageView iconview, final String colour) {
-        iconview.getDrawable().setColorFilter(Color.parseColor(colour), PorterDuff.Mode.SRCIN);
+    public void _Icon_Colour(final ImageView _iconview, final String _colour) {
+        _iconview.getDrawable().setColorFilter(Color.parseColor(_colour), PorterDuff.Mode.SRC_IN);
     }
 
     public class Listview2Adapter extends BaseAdapter {
 
-        ArrayList<HashMap<String, Object>> data;
+        ArrayList<HashMap<String, Object>> _data;
 
-        public Listview2Adapter(ArrayList<HashMap<String, Object>> arr) {
-            data = arr;
+        public Listview2Adapter(ArrayList<HashMap<String, Object>> _arr) {
+            _data = _arr;
         }
 
         @Override
         public int getCount() {
-            return data.size();
+            return _data.size();
         }
 
         @Override
-        public HashMap<String, Object> getItem(int index) {
-            return data.get(index);
+        public HashMap<String, Object> getItem(int _index) {
+            return _data.get(_index);
         }
 
         @Override
-        public long getItemId(int index) {
-            return index;
+        public long getItemId(int _index) {
+            return _index;
         }
 
         @Override
-        public View getView(final int position, View v, ViewGroup container) {
-            LayoutInflater inflater = getLayoutInflater();
-            View view = v;
-            if (view == null) {
-                view = inflater.inflate(R.layout.offerbtcus, null);
+        public View getView(final int _position, View _v, ViewGroup _container) {
+            LayoutInflater _inflater = getLayoutInflater();
+            View _view = _v;
+            if (_view == null) {
+                _view = _inflater.inflate(R.layout.offerbt_cus, null);
             }
 
-            final LinearLayout linear1 = view.findViewById(R.id.linear1);
-            final ImageView imageview1 = view.findViewById(R.id.imageview1);
-            final TextView textview1 = view.findViewById(R.id.textview1);
-            final LinearLayout linear2 = view.findViewById(R.id.linear2);
-            final TextView textview2 = view.findViewById(R.id.textview2);
+            final LinearLayout linear1 = _view.findViewById(R.id.linear1);
+            final ImageView imageview1 = _view.findViewById(R.id.imageview1);
+            final TextView textview1 = _view.findViewById(R.id.textview1);
+            final LinearLayout linear2 = _view.findViewById(R.id.linear2);
+            final TextView textview2 = _view.findViewById(R.id.textview2);
 
             /*
 
@@ -299,7 +300,7 @@ public class PurchaseActivity extends AppCompatActivity {
                 android.graphics.drawable.GradientDrawable SketchUi = new android.graphics.drawable.GradientDrawable();
                 int d = (int) getApplicationContext().getResources().getDisplayMetrics().density;
                 int clrs [] = {0xFF0B2447,0xFF576CBC};
-                SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFTRIGHT, clrs);
+                SketchUi= new android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT, clrs);
                 SketchUi.setCornerRadius(d*25);
                 SketchUi.setStroke(d*0,0xFFFFFFFF);
                 linear1.setElevation(d*3);
@@ -307,108 +308,58 @@ public class PurchaseActivity extends AppCompatActivity {
                 linear1.setBackground(SketchUiRD);
                 linear1.setClickable(true);
             }
-            textview1.setText(lmap2.get((int)position).get("price").toString());
+            textview1.setText(lmap2.get((int)_position).get("price").toString());
 
-            return view;
+            return _view;
         }
     }
 
     public class Listview1Adapter extends BaseAdapter {
 
-        ArrayList<HashMap<String, Object>> data;
+        ArrayList<HashMap<String, Object>> _data;
 
-        public Listview1Adapter(ArrayList<HashMap<String, Object>> arr) {
-            data = arr;
+        public Listview1Adapter(ArrayList<HashMap<String, Object>> _arr) {
+            _data = _arr;
         }
 
         @Override
         public int getCount() {
-            return data.size();
+            return _data.size();
         }
 
         @Override
-        public HashMap<String, Object> getItem(int index) {
-            return data.get(index);
+        public HashMap<String, Object> getItem(int _index) {
+            return _data.get(_index);
         }
 
         @Override
-        public long getItemId(int index) {
-            return index;
+        public long getItemId(int _index) {
+            return _index;
         }
 
         @Override
-        public View getView(final int position, View v, ViewGroup container) {
-            LayoutInflater inflater = getLayoutInflater();
-            View view = v;
-            if (view == null) {
-                view = inflater.inflate(R.layout.offercus, null);
+        public View getView(final int _position, View _v, ViewGroup _container) {
+            LayoutInflater _inflater = getLayoutInflater();
+            View _view = _v;
+            if (_view == null) {
+                _view = _inflater.inflate(R.layout.offer_cus, null);
             }
 
-            final LinearLayout linear1 = view.findViewById(R.id.linear1);
-            final LinearLayout linear2 = view.findViewById(R.id.linear2);
-            final ImageView imageview1 = view.findViewById(R.id.imageview1);
-            final TextView textview1 = view.findViewById(R.id.textview1);
+            final LinearLayout linear1 = _view.findViewById(R.id.linear1);
+            final LinearLayout linear2 = _view.findViewById(R.id.linear2);
+            final ImageView imageview1 = _view.findViewById(R.id.imageview1);
+            final TextView textview1 = _view.findViewById(R.id.textview1);
 
             try{
-                textview1.setText(lmap.get((int)position).get("title").toString());
+                textview1.setText(lmap.get((int)_position).get("title").toString());
                 textview1.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/josefinsanslight.ttf"), 1);
-                IconColour(imageview1, "#0B2447");
+                _Icon_Colour(imageview1, "#0B2447");
             }catch(Exception e){
 
             }
 
-            return view;
+            return _view;
         }
-    }
-
-    @Deprecated
-    public void showMessage(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-    }
-
-    @Deprecated
-    public int getLocationX(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[0];
-    }
-
-    @Deprecated
-    public int getLocationY(View v) {
-        int location[] = new int[2];
-        v.getLocationInWindow(location);
-        return location[1];
-    }
-
-    @Deprecated
-    public int getRandom(int min, int max) {
-        Random random = new Random();
-        return random.nextInt(max - min + 1) + min;
-    }
-
-    @Deprecated
-    public ArrayList<Double> getCheckedItemPositionsToArray(ListView list) {
-        ArrayList<Double> result = new ArrayList<Double>();
-        SparseBooleanArray arr = list.getCheckedItemPositions();
-        for (int iIdx = 0; iIdx < arr.size(); iIdx++) {
-            if (arr.valueAt(iIdx))
-                result.add((double)arr.keyAt(iIdx));
-        }
-        return result;
-    }
-
-    @Deprecated
-    public float getDip(int input) {
-        return TypedValue.applyDimension(TypedValue.COMPLEXUNITDIP, input, getResources().getDisplayMetrics());
-    }
-
-    @Deprecated
-    public int getDisplayWidthPixels() {
-        return getResources().getDisplayMetrics().widthPixels;
-    }
-
-    @Deprecated
-    public int getDisplayHeightPixels() {
-        return getResources().getDisplayMetrics().heightPixels;
     }
 }
+

@@ -34,7 +34,6 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.io.FileNotFoundException;
 
 public class FileUtil {
 
@@ -262,7 +261,7 @@ public class FileUtil {
                 }
 
                 final Uri contentUri = ContentUris
-                        .withAppendedId(Uri.parse("content://downloads/publicdownloads"), Long.valueOf(id));
+                        .withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
                 path = getDataColumn(context, contentUri, null, null);
             } else if (isMediaDocument(uri)) {
@@ -272,23 +271,23 @@ public class FileUtil {
 
                 Uri contentUri = null;
                 if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNALCONTENTURI;
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNALCONTENTURI;
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNALCONTENTURI;
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
 
-                final String selection = "id=?";
+                final String selection = "_id=?";
                 final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
                 path = getDataColumn(context, contentUri, selection, selectionArgs);
             }
-        } else if (ContentResolver.SCHEMECONTENT.equalsIgnoreCase(uri.getScheme())) {
+        } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(uri.getScheme())) {
             path = getDataColumn(context, uri, null, null);
-        } else if (ContentResolver.SCHEMEFILE.equalsIgnoreCase(uri.getScheme())) {
+        } else if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(uri.getScheme())) {
             path = uri.getPath();
         }
 
@@ -308,11 +307,10 @@ public class FileUtil {
                 column
         };
 
-        try {
-            Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+        try (Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null)) {
             if (cursor != null && cursor.moveToFirst()) {
-                final int columnindex = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(columnindex);
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
             }
         } catch (Exception e) {
 
@@ -335,12 +333,8 @@ public class FileUtil {
 
     private static void saveBitmap(Bitmap bitmap, String destPath) {
         FileUtil.createNewFile(destPath);
-        try {
-            try (FileOutputStream out = new FileOutputStream(new File(destPath))) {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        try (FileOutputStream out = new FileOutputStream(new File(destPath))) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -411,7 +405,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
         Bitmap src = BitmapFactory.decodeFile(fromPath);
         Bitmap bitmap = Bitmap.createBitmap(src.getWidth(),
-                src.getHeight(), Bitmap.Config.ARGB8888);
+                src.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
         final int color = 0xff424242;
@@ -423,7 +417,7 @@ public class FileUtil {
         paint.setColor(color);
         canvas.drawCircle(src.getWidth() / 2, src.getHeight() / 2,
                 src.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRCIN));
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(src, rect, rect, paint);
 
         saveBitmap(bitmap, destPath);
@@ -433,7 +427,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
         Bitmap src = BitmapFactory.decodeFile(fromPath);
         Bitmap bitmap = Bitmap.createBitmap(src.getWidth(), src
-                .getHeight(), Bitmap.Config.ARGB8888);
+                .getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
         final int color = 0xff424242;
@@ -447,7 +441,7 @@ public class FileUtil {
         paint.setColor(color);
         canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
 
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRCIN));
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(src, rect, rect, paint);
 
         saveBitmap(bitmap, destPath);
@@ -571,18 +565,18 @@ public class FileUtil {
         int rotate = 0;
         try {
             ExifInterface exif = new ExifInterface(filePath);
-            int iOrientation = exif.getAttributeInt(ExifInterface.TAGORIENTATION, -1);
+            int iOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
 
             switch (iOrientation) {
-                case ExifInterface.ORIENTATIONROTATE90:
+                case ExifInterface.ORIENTATION_ROTATE_90:
                     rotate = 90;
                     break;
 
-                case ExifInterface.ORIENTATIONROTATE180:
+                case ExifInterface.ORIENTATION_ROTATE_180:
                     rotate = 180;
                     break;
 
-                case ExifInterface.ORIENTATIONROTATE270:
+                case ExifInterface.ORIENTATION_ROTATE_270:
                     rotate = 270;
                     break;
             }
@@ -594,8 +588,8 @@ public class FileUtil {
     }
 
     public static File createNewPictureFile(Context context) {
-        SimpleDateFormat date = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String fileName = date.format(new Date()) + ".jpg";
-        return new File(context.getExternalFilesDir(Environment.DIRECTORYDCIM).getAbsolutePath() + File.separator + fileName);
+        return new File(context.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath() + File.separator + fileName);
     }
 }

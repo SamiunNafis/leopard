@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import com.leopard.vpn.R;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,8 +16,8 @@ import java.util.Arrays;
 import java.util.Vector;
 import de.blinkt.openvpn.VpnProfile;
 public class VPNLaunchHelper {
-    private static final String MININONPIEVPN = "nopieopenvpn";
-    private static final String MINIPIEVPN = "pieopenvpn";
+    private static final String MININONPIEVPN = "nopie_openvpn";
+    private static final String MINIPIEVPN = "pie_openvpn";
     private static final String OVPNCONFIGFILE = "android.conf";
     private static String writeMiniVPN(Context context) {
         String[] abis;
@@ -27,11 +28,11 @@ public class VPNLaunchHelper {
             abis = new String[]{Build.CPU_ABI, Build.CPU_ABI2};
         String nativeAPI = NativeUtils.getNativeAPI();
         if (!nativeAPI.equals(abis[0])) {
-            VpnStatus.logWarning(R.string.abimismatch, Arrays.toString(abis), nativeAPI);
+            VpnStatus.logWarning(R.string.abi_mismatch, Arrays.toString(abis), nativeAPI);
             abis = new String[]{nativeAPI};
         }
         for (String abi : abis) {
-            File vpnExecutable = new File(context.getCacheDir(), "c" + getMiniVPNExecutableName() + "." + abi);
+            File vpnExecutable = new File(context.getCacheDir(), "c_" + getMiniVPNExecutableName() + "." + abi);
             if ((vpnExecutable.exists() && vpnExecutable.canExecute()) || writeMiniVPNBinary(context, abi, vpnExecutable)) {
                 return vpnExecutable.getPath();
             }

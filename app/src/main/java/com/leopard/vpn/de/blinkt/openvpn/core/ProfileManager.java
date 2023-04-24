@@ -21,9 +21,9 @@ import java.util.Set;
 import de.blinkt.openvpn.VpnProfile;
 
 public class ProfileManager {
-    private static final String PREFSNAME = "VPNList";
-    private static final String LASTCONNECTEDPROFILE = "lastConnectedProfile";
-    private static final String TEMPORARYPROFILEFILENAME = "temporary-vpn-profile";
+    private static final String PREFS_NAME = "VPNList";
+    private static final String LAST_CONNECTED_PROFILE = "lastConnectedProfile";
+    private static final String TEMPORARY_PROFILE_FILENAME = "temporary-vpn-profile";
     private static ProfileManager instance;
     private static VpnProfile mLastConnectedVpn = null;
     private static VpnProfile tmpprofile = null;
@@ -53,7 +53,7 @@ public class ProfileManager {
     public static void setConntectedVpnProfileDisconnected(Context c) {
         SharedPreferences prefs = Preferences.getDefaultSharedPreferences(c);
         Editor prefsedit = prefs.edit();
-        prefsedit.putString(LASTCONNECTEDPROFILE, null);
+        prefsedit.putString(LAST_CONNECTED_PROFILE, null);
         prefsedit.apply();
     }
 
@@ -63,7 +63,7 @@ public class ProfileManager {
     public static void setConnectedVpnProfile(Context c, VpnProfile connectedProfile) {
         SharedPreferences prefs = Preferences.getDefaultSharedPreferences(c);
         Editor prefsedit = prefs.edit();
-        prefsedit.putString(LASTCONNECTEDPROFILE, connectedProfile.getUUIDString());
+        prefsedit.putString(LAST_CONNECTED_PROFILE, connectedProfile.getUUIDString());
         prefsedit.apply();
         mLastConnectedVpn = connectedProfile;
     }
@@ -73,7 +73,7 @@ public class ProfileManager {
      */
     public static VpnProfile getLastConnectedProfile(Context c) {
         SharedPreferences prefs = Preferences.getDefaultSharedPreferences(c);
-        String lastConnectedProfile = prefs.getString(LASTCONNECTEDPROFILE, null);
+        String lastConnectedProfile = prefs.getString(LAST_CONNECTED_PROFILE, null);
         if (lastConnectedProfile != null) return get(c, lastConnectedProfile);
         else return null;
     }
@@ -91,7 +91,7 @@ public class ProfileManager {
         if (updateVersion) profile.mVersion += 1;
         ObjectOutputStream vpnFile;
         String filename = profile.getUUID().toString() + ".vp";
-        if (isTemporary) filename = TEMPORARYPROFILEFILENAME + ".vp";
+        if (isTemporary) filename = TEMPORARY_PROFILE_FILENAME + ".vp";
         try {
             vpnFile = new ObjectOutputStream(context.openFileOutput(filename, Activity.MODE_PRIVATE));
             vpnFile.writeObject(profile);
@@ -158,7 +158,7 @@ public class ProfileManager {
     }
 
     public void saveProfileList(Context context) {
-        SharedPreferences sharedprefs = Preferences.getSharedPreferencesMulti(PREFSNAME, context);
+        SharedPreferences sharedprefs = Preferences.getSharedPreferencesMulti(PREFS_NAME, context);
         Editor editor = sharedprefs.edit();
         editor.putStringSet("vpnlist", profiles.keySet());
         // For reasing I do not understand at all
@@ -179,13 +179,13 @@ public class ProfileManager {
 
     private void loadVPNList(Context context) {
         profiles = new HashMap<>();
-        SharedPreferences listpref = Preferences.getSharedPreferencesMulti(PREFSNAME, context);
+        SharedPreferences listpref = Preferences.getSharedPreferencesMulti(PREFS_NAME, context);
         Set<String> vlist = listpref.getStringSet("vpnlist", null);
         if (vlist == null) {
             vlist = new HashSet<>();
         }
         // Always try to load the temporary profile
-        vlist.add(TEMPORARYPROFILEFILENAME);
+        vlist.add(TEMPORARY_PROFILE_FILENAME);
         for (String vpnentry : vlist) {
             try {
                 ObjectInputStream vpnfile = new ObjectInputStream(context.openFileInput(vpnentry + ".vp"));
@@ -193,13 +193,13 @@ public class ProfileManager {
                 // Sanity check
                 if (vp == null || vp.mName == null || vp.getUUID() == null) continue;
                 vp.upgradeProfile();
-                if (vpnentry.equals(TEMPORARYPROFILEFILENAME)) {
+                if (vpnentry.equals(TEMPORARY_PROFILE_FILENAME)) {
                     tmpprofile = vp;
                 } else {
                     profiles.put(vp.getUUID().toString(), vp);
                 }
             } catch (IOException | ClassNotFoundException e) {
-                if (!vpnentry.equals(TEMPORARYPROFILEFILENAME)) VpnStatus.logException("Loading VPN List", e);
+                if (!vpnentry.equals(TEMPORARY_PROFILE_FILENAME)) VpnStatus.logException("Loading VPN List", e);
             }
         }
     }

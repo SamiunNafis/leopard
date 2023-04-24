@@ -42,20 +42,21 @@ public class ProFragmentActivity extends Fragment {
 
     @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.profragment, container, false);
-        initialize(savedInstanceState, view);
+    public View onCreateView(@NonNull LayoutInflater _inflater, @Nullable ViewGroup _container, @Nullable Bundle _savedInstanceState) {
+        View _view = _inflater.inflate(R.layout.pro_fragment, _container, false);
+        initialize(_savedInstanceState, _view);
         FirebaseApp.initializeApp(getContext());
         initializeLogic();
-        return view;
+        return _view;
     }
 
-    private void initialize(Bundle savedInstanceState, View view) {
-        linear1 = view.findViewById(R.id.linear1);
-        textview1 = view.findViewById(R.id.textview1);
+    private void initialize(Bundle _savedInstanceState, View _view) {
+        linear1 = _view.findViewById(R.id.linear1);
+        textview1 = _view.findViewById(R.id.textview1);
     }
 
     private void initializeLogic() {
     }
 
 }
+

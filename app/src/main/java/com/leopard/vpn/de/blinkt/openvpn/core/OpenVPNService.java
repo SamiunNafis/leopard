@@ -40,6 +40,7 @@ import android.graphics.Color;
 
 import com.leopard.vpn.BuildConfig;
 import com.leopard.vpn.HomeActivity;
+import com.leopard.vpn.R;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -56,22 +57,22 @@ import de.blinkt.openvpn.VpnProfile;
 import de.blinkt.openvpn.core.VpnStatus.ByteCountListener;
 import de.blinkt.openvpn.core.VpnStatus.StateListener;
 
-import static de.blinkt.openvpn.core.ConnectionStatus.LEVELCONNECTED;
-import static de.blinkt.openvpn.core.ConnectionStatus.LEVELWAITINGFORUSERINPUT;
+import static de.blinkt.openvpn.core.ConnectionStatus.LEVEL_CONNECTED;
+import static de.blinkt.openvpn.core.ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT;
 import static de.blinkt.openvpn.core.NetworkSpace.ipAddress;
 
 public class OpenVPNService extends VpnService implements StateListener, Callback, ByteCountListener, IOpenVPNServiceInternal {
-    public static final String STARTSERVICE = "de.blinkt.openvpn.STARTSERVICE";
-    public static final String STARTSERVICESTICKY = "de.blinkt.openvpn.STARTSERVICESTICKY";
-    public static final String ALWAYSSHOWNOTIFICATION = "de.blinkt.openvpn.NOTIFICATIONALWAYSVISIBLE";
-    public static final String DISCONNECTVPN = "de.blinkt.openvpn.DISCONNECTVPN";
-    public static final String NOTIFICATIONCHANNELBGID = "vpnbg";
-    public static final String NOTIFICATIONCHANNELNEWSTATUSID = "openvpnnewstat";
-    private static final String PAUSEVPN = "de.blinkt.openvpn.PAUSEVPN";
-    private static final String RESUMEVPN = "com.leopard.vpn.RESUMEVPN";
-    private static final int PRIORITYMIN = -2;
-    private static final int PRIORITYDEFAULT = 0;
-    private static final int PRIORITYMAX = 2;
+    public static final String START_SERVICE = "de.blinkt.openvpn.START_SERVICE";
+    public static final String START_SERVICE_STICKY = "de.blinkt.openvpn.START_SERVICE_STICKY";
+    public static final String ALWAYS_SHOW_NOTIFICATION = "de.blinkt.openvpn.NOTIFICATION_ALWAYS_VISIBLE";
+    public static final String DISCONNECT_VPN = "de.blinkt.openvpn.DISCONNECT_VPN";
+    public static final String NOTIFICATION_CHANNEL_BG_ID = "vpn_bg";
+    public static final String NOTIFICATION_CHANNEL_NEWSTATUS_ID = "openvpn_newstat";
+    private static final String PAUSE_VPN = "de.blinkt.openvpn.PAUSE_VPN";
+    private static final String RESUME_VPN = "com.leopard.vpn.RESUME_VPN";
+    private static final int PRIORITY_MIN = -2;
+    private static final int PRIORITY_DEFAULT = 0;
+    private static final int PRIORITY_MAX = 2;
     private static boolean mNotificationAlwaysVisible = false;
     private static Class mNotificationActivityClass;
     private final Vector<String> mDnslist = new Vector<>();
@@ -121,23 +122,23 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         float bytesUnit = (float) (bytes / Math.pow(unit, exp));
         if (speed) switch (exp) {
             case 0:
-                return res.getString(R.string.bitspersecond, bytesUnit);
+                return res.getString(R.string.bits_per_second, bytesUnit);
             case 1:
-                return res.getString(R.string.kbitspersecond, bytesUnit);
+                return res.getString(R.string.kbits_per_second, bytesUnit);
             case 2:
-                return res.getString(R.string.mbitspersecond, bytesUnit);
+                return res.getString(R.string.mbits_per_second, bytesUnit);
             default:
-                return res.getString(R.string.gbitspersecond, bytesUnit);
+                return res.getString(R.string.gbits_per_second, bytesUnit);
         }
         else switch (exp) {
             case 0:
-                return res.getString(R.string.volumebyte, bytesUnit);
+                return res.getString(R.string.volume_byte, bytesUnit);
             case 1:
-                return res.getString(R.string.volumekbyte, bytesUnit);
+                return res.getString(R.string.volume_kbyte, bytesUnit);
             case 2:
-                return res.getString(R.string.volumembyte, bytesUnit);
+                return res.getString(R.string.volume_mbyte, bytesUnit);
             default:
-                return res.getString(R.string.volumegbyte, bytesUnit);
+                return res.getString(R.string.volume_gbyte, bytesUnit);
         }
     }
 
@@ -153,13 +154,13 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     @Override
     public IBinder onBind(Intent intent) {
         String action = intent.getAction();
-        if (action != null && action.equals(STARTSERVICE)) return mBinder;
+        if (action != null && action.equals(START_SERVICE)) return mBinder;
         else return super.onBind(intent);
     }
 
     @Override
     public void onRevoke() {
-        VpnStatus.logError(R.string.permissionrevoked);
+        VpnStatus.logError(R.string.permission_revoked);
         mManagement.stopVPN(false);
         endVpnService();
     }
@@ -201,21 +202,21 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         int icon = getIconByConnectionStatus(status);
         android.app.Notification.Builder nbuilder = new Notification.Builder(this);
         int priority;
-        if (channel.equals(NOTIFICATIONCHANNELBGID)) priority = PRIORITYMIN;
-        else priority = PRIORITYDEFAULT;
+        if (channel.equals(NOTIFICATION_CHANNEL_BG_ID)) priority = PRIORITY_MIN;
+        else priority = PRIORITY_DEFAULT;
         if (mProfile != null) {
-            nbuilder.setContentTitle(getString(R.string.notifcationtitle, getApplicationContext().getString(R.string.appname), Build.MODEL));
+            nbuilder.setContentTitle(getString(R.string.notifcation_title, getApplicationContext().getString(R.string.app_name), Build.MODEL));
         } else {
-            nbuilder.setContentTitle(getString(R.string.notifcationtitlenotconnect));
+            nbuilder.setContentTitle(getString(R.string.notifcation_title_notconnect));
         }
         nbuilder.setContentText(msg);
         nbuilder.setOnlyAlertOnce(true);
         nbuilder.setOngoing(true);
         nbuilder.setSmallIcon(icon);
-        if (status == LEVELWAITINGFORUSERINPUT) nbuilder.setContentIntent(getUserInputIntent(msg));
+        if (status == LEVEL_WAITING_FOR_USER_INPUT) nbuilder.setContentIntent(getUserInputIntent(msg));
         else nbuilder.setContentIntent(getGraphPendingIntent());
         if (when != 0) nbuilder.setWhen(when);
-        // Try to set the priority available since API 16 (JELLY_BEAN)
+        // Try to set the priority available since API 16 (Jellybean)
       /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) jbNotificationExtras(priority, nbuilder);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) lpNotificationExtras(nbuilder);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -259,24 +260,24 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     private int getIconByConnectionStatus(ConnectionStatus level) {
         /*switch (level) {
-            case LEVELCONNECTED:
-                return R.drawable.icstatvpn;
-            case LEVELAUTHFAILED:
-            case LEVELNONETWORK:
-            case LEVELNOTCONNECTED:
-                return R.drawable.icstatvpnoffline;
-            case LEVELCONNECTINGNOSERVERREPLYYET:
-            case LEVELWAITINGFORUSERINPUT:
-                return R.drawable.icstatvpnoutline;
-            case LEVELCONNECTINGSERVERREPLIED:
-                return R.drawable.icstatvpnemptyhalo;
-            case LEVELVPNPAUSED:
-                return android.R.drawable.icmediapause;
-            case UNKNOWNLEVEL:
+            case LEVEL_CONNECTED:
+                return R.drawable.ic_stat_vpn;
+            case LEVEL_AUTH_FAILED:
+            case LEVEL_NONETWORK:
+            case LEVEL_NOTCONNECTED:
+                return R.drawable.ic_stat_vpn_offline;
+            case LEVEL_CONNECTING_NO_SERVER_REPLY_YET:
+            case LEVEL_WAITING_FOR_USER_INPUT:
+                return R.drawable.ic_stat_vpn_outline;
+            case LEVEL_CONNECTING_SERVER_REPLIED:
+                return R.drawable.ic_stat_vpn_empty_halo;
+            case LEVEL_VPNPAUSED:
+                return android.R.drawable.ic_media_pause;
+            case UNKNOWN_LEVEL:
             default:
-                return R.drawable.icstatvpn;
+                return R.drawable.ic_stat_vpn;
         }*/
-        return R.drawable.icconnectionicon;
+        return R.drawable.ic_connection_icon;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -362,20 +363,20 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.getBooleanExtra(ALWAYSSHOWNOTIFICATION, false)) mNotificationAlwaysVisible = true;
+        if (intent != null && intent.getBooleanExtra(ALWAYS_SHOW_NOTIFICATION, false)) mNotificationAlwaysVisible = true;
         VpnStatus.addStateListener(this);
         VpnStatus.addByteCountListener(this);
         guiHandler = new Handler(getMainLooper());
-        if (intent != null && PAUSEVPN.equals(intent.getAction())) {
+        if (intent != null && PAUSE_VPN.equals(intent.getAction())) {
             if (mDeviceStateReceiver != null) mDeviceStateReceiver.userPause(true);
             return START_NOT_STICKY;
         }
-        if (intent != null && RESUMEVPN.equals(intent.getAction())) {
+        if (intent != null && RESUME_VPN.equals(intent.getAction())) {
             if (mDeviceStateReceiver != null) mDeviceStateReceiver.userPause(false);
             return START_NOT_STICKY;
         }
-        if (intent != null && STARTSERVICE.equals(intent.getAction())) return START_NOT_STICKY;
-        if (intent != null && STARTSERVICESTICKY.equals(intent.getAction())) {
+        if (intent != null && START_SERVICE.equals(intent.getAction())) return START_NOT_STICKY;
+        if (intent != null && START_SERVICE_STICKY.equals(intent.getAction())) {
             return START_REDELIVER_INTENT;
         }
         if (intent != null && intent.hasExtra(getPackageName() + ".profileUUID")) {
@@ -389,7 +390,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         } else {
             /* The intent is null when we are set as always-on or the service has been restarted. */
             mProfile = ProfileManager.getLastConnectedProfile(this);
-            VpnStatus.logInfo(R.string.servicerestarted);
+            VpnStatus.logInfo(R.string.service_restarted);
             /* Got no profile, just stop */
             if (mProfile == null) {
                 Log.d("OpenVPN", "Got no last connected profile on null intent. Assuming always on.");
@@ -422,8 +423,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     }
 
     private void startOpenVPN() {
-        VpnStatus.logInfo(R.string.buildingconfigration);
-        VpnStatus.updateStateString("VPNGENERATECONFIG", "", R.string.buildingconfigration, ConnectionStatus.LEVELSTART);
+        VpnStatus.logInfo(R.string.building_configration);
+        VpnStatus.updateStateString("VPN_GENERATE_CONFIG", "", R.string.building_configration, ConnectionStatus.LEVEL_START);
         try {
             mProfile.writeConfigFile(this);
         } catch (IOException e) {
@@ -562,12 +563,12 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     public ParcelFileDescriptor openTun() {
         //Debug.startMethodTracing(getExternalFilesDir(null).toString() + "/opentun.trace", 40* 1024 * 1024);
         Builder builder = new Builder();
-        VpnStatus.logInfo(R.string.lastopenvpntunconfig);
+        VpnStatus.logInfo(R.string.last_openvpn_tun_config);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mProfile.mAllowLocalLAN) {
             allowAllAFFamilies(builder);
         }
         if (mLocalIP == null && mLocalIPv6 == null) {
-            VpnStatus.logError(getString(R.string.opentunnoipaddr));
+            VpnStatus.logError(getString(R.string.opentun_no_ipaddr));
             return null;
         }
         if (mLocalIP != null) {
@@ -575,7 +576,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             try {
                 builder.addAddress(mLocalIP.mIp, mLocalIP.len);
             } catch (IllegalArgumentException iae) {
-                VpnStatus.logError(R.string.dnsadderror, mLocalIP, iae.getLocalizedMessage());
+                VpnStatus.logError(R.string.dns_add_error, mLocalIP, iae.getLocalizedMessage());
                 return null;
             }
         }
@@ -584,7 +585,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             try {
                 builder.addAddress(ipv6parts[0], Integer.parseInt(ipv6parts[1]));
             } catch (IllegalArgumentException iae) {
-                VpnStatus.logError(R.string.ipadderror, mLocalIPv6, iae.getLocalizedMessage());
+                VpnStatus.logError(R.string.ip_add_error, mLocalIPv6, iae.getLocalizedMessage());
                 return null;
             }
         }
@@ -592,7 +593,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             try {
                 builder.addDnsServer(dns);
             } catch (IllegalArgumentException iae) {
-                VpnStatus.logError(R.string.dnsadderror, dns, iae.getLocalizedMessage());
+                VpnStatus.logError(R.string.dns_add_error, dns, iae.getLocalizedMessage());
             }
         }
         String release = Build.VERSION.RELEASE;
@@ -626,34 +627,34 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         ipAddress multicastRange = new ipAddress(new CIDRIP("224.0.0.0", 3), true);
         for (NetworkSpace.ipAddress route : positiveIPv4Routes) {
             try {
-                if (multicastRange.containsNet(route)) VpnStatus.logDebug(R.string.ignoremulticastroute, route.toString());
+                if (multicastRange.containsNet(route)) VpnStatus.logDebug(R.string.ignore_multicast_route, route.toString());
                 else builder.addRoute(route.getIPv4Address(), route.networkMask);
             } catch (IllegalArgumentException ia) {
-                VpnStatus.logError(getString(R.string.routerejected) + route + " " + ia.getLocalizedMessage());
+                VpnStatus.logError(getString(R.string.route_rejected) + route + " " + ia.getLocalizedMessage());
             }
         }
         for (NetworkSpace.ipAddress route6 : positiveIPv6Routes) {
             try {
                 builder.addRoute(route6.getIPv6Address(), route6.networkMask);
             } catch (IllegalArgumentException ia) {
-                VpnStatus.logError(getString(R.string.routerejected) + route6 + " " + ia.getLocalizedMessage());
+                VpnStatus.logError(getString(R.string.route_rejected) + route6 + " " + ia.getLocalizedMessage());
             }
         }
         if (mDomain != null) builder.addSearchDomain(mDomain);
-        VpnStatus.logInfo(R.string.localipinfo, mLocalIP.mIp, mLocalIP.len, mLocalIPv6, mMtu);
-        VpnStatus.logInfo(R.string.dnsserverinfo, TextUtils.join(", ", mDnslist), mDomain);
-        VpnStatus.logInfo(R.string.routesinfoincl, TextUtils.join(", ", mRoutes.getNetworks(true)), TextUtils.join(", ", mRoutesv6.getNetworks(true)));
-        VpnStatus.logInfo(R.string.routesinfoexcl, TextUtils.join(", ", mRoutes.getNetworks(false)), TextUtils.join(", ", mRoutesv6.getNetworks(false)));
-        VpnStatus.logDebug(R.string.routesdebug, TextUtils.join(", ", positiveIPv4Routes), TextUtils.join(", ", positiveIPv6Routes));
+        VpnStatus.logInfo(R.string.local_ip_info, mLocalIP.mIp, mLocalIP.len, mLocalIPv6, mMtu);
+        VpnStatus.logInfo(R.string.dns_server_info, TextUtils.join(", ", mDnslist), mDomain);
+        VpnStatus.logInfo(R.string.routes_info_incl, TextUtils.join(", ", mRoutes.getNetworks(true)), TextUtils.join(", ", mRoutesv6.getNetworks(true)));
+        VpnStatus.logInfo(R.string.routes_info_excl, TextUtils.join(", ", mRoutes.getNetworks(false)), TextUtils.join(", ", mRoutesv6.getNetworks(false)));
+        VpnStatus.logDebug(R.string.routes_debug, TextUtils.join(", ", positiveIPv4Routes), TextUtils.join(", ", positiveIPv6Routes));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setAllowedVpnPackages(builder);
         }
         String session = mProfile.mConnections[0].mServerName;
-        if (mLocalIP != null && mLocalIPv6 != null) session = getString(R.string.sessionipv6string, session, mLocalIP, mLocalIPv6);
-        else if (mLocalIP != null) session = getString(R.string.sessionipv4string, session, mLocalIP);
+        if (mLocalIP != null && mLocalIPv6 != null) session = getString(R.string.session_ipv6string, session, mLocalIP, mLocalIPv6);
+        else if (mLocalIP != null) session = getString(R.string.session_ipv4string, session, mLocalIP);
         builder.setSession(session);
         // No DNS Server, log a warning
-        if (mDnslist.size() == 0) VpnStatus.logInfo(R.string.warnnodns);
+        if (mDnslist.size() == 0) VpnStatus.logInfo(R.string.warn_no_dns);
         mLastTunCfg = getTunConfigString();
         // Reset information
         mDnslist.clear();
@@ -669,10 +670,10 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             if (tun == null) throw new NullPointerException("Android establish() method returned null (Really broken network configuration?)");
             return tun;
         } catch (Exception e) {
-            VpnStatus.logError(R.string.tunopenerror);
+            VpnStatus.logError(R.string.tun_open_error);
             VpnStatus.logError(getString(R.string.error) + e.getLocalizedMessage());
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                VpnStatus.logError(R.string.tunerrorhelpful);
+                VpnStatus.logError(R.string.tun_error_helpful);
             }
             return null;
         }
@@ -717,11 +718,11 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 mProfile.mAllowedAppsVpn.remove(pkg);
-                VpnStatus.logInfo(R.string.appnolongerexists, pkg);
+                VpnStatus.logInfo(R.string.app_no_longer_exists, pkg);
             }
         }
         if (!mProfile.mAllowedAppsVpnAreDisallowed && !atLeastOneAllowedApp) {
-            VpnStatus.logDebug(R.string.noallowedapp, getPackageName());
+            VpnStatus.logDebug(R.string.no_allowed_app, getPackageName());
             try {
                 builder.addAllowedApplication(getPackageName());
             } catch (PackageManager.NameNotFoundException e) {
@@ -729,9 +730,9 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             }
         }
         if (mProfile.mAllowedAppsVpnAreDisallowed) {
-            VpnStatus.logDebug(R.string.disallowedvpnappsinfo, TextUtils.join(", ", mProfile.mAllowedAppsVpn));
+            VpnStatus.logDebug(R.string.disallowed_vpn_apps_info, TextUtils.join(", ", mProfile.mAllowedAppsVpn));
         } else {
-            VpnStatus.logDebug(R.string.allowedvpnappsinfo, TextUtils.join(", ", mProfile.mAllowedAppsVpn));
+            VpnStatus.logDebug(R.string.allowed_vpn_apps_info, TextUtils.join(", ", mProfile.mAllowedAppsVpn));
         }
     }
 
@@ -764,9 +765,9 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         if (localNet.containsNet(gatewayIP)) include = true;
         if (gateway != null && (gateway.equals("255.255.255.255") || gateway.equals(mRemoteGW))) include = true;
         if (route.len == 32 && !mask.equals("255.255.255.255")) {
-            VpnStatus.logWarning(R.string.routenotcidr, dest, mask);
+            VpnStatus.logWarning(R.string.route_not_cidr, dest, mask);
         }
-        if (route.normalise()) VpnStatus.logWarning(R.string.routenotnetip, dest, route.len, route.mIp);
+        if (route.normalise()) VpnStatus.logWarning(R.string.route_not_netip, dest, route.len, route.mIp);
         mRoutes.addIP(route, include);
     }
 
@@ -816,11 +817,11 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 mLocalIP.len = masklen;
             } else {
                 mLocalIP.len = 32;
-                if (!"p2p".equals(mode)) VpnStatus.logWarning(R.string.ipnotcidr, local, netmask, mode);
+                if (!"p2p".equals(mode)) VpnStatus.logWarning(R.string.ip_not_cidr, local, netmask, mode);
             }
         }
         if (("p2p".equals(mode) && mLocalIP.len < 32) || ("net30".equals(mode) && mLocalIP.len < 30)) {
-            VpnStatus.logWarning(R.string.iplookslikesubnet, local, netmask, mode);
+            VpnStatus.logWarning(R.string.ip_looks_like_subnet, local, netmask, mode);
         }
         /* Workaround for Lollipop, it  does not route traffic to the VPNs own network mask */
         if (mLocalIP.len <= 31 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -842,17 +843,17 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         // Notification should be invisible in this state
         doSendBroadcast(state, level);
         if (mProcessThread == null && !mNotificationAlwaysVisible) return;
-        String channel = NOTIFICATIONCHANNELNEWSTATUSID;
+        String channel = NOTIFICATION_CHANNEL_NEWSTATUS_ID;
         // Display byte count only after being connected
         {
-            if (level == LEVELWAITINGFORUSERINPUT) {
+            if (level == LEVEL_WAITING_FOR_USER_INPUT) {
                 // The user is presented a dialog of some kind, no need to inform the user
                 // with a notifcation
                 return;
-            } else if (level == LEVELCONNECTED) {
+            } else if (level == LEVEL_CONNECTED) {
                 mDisplayBytecount = true;
                 mConnecttime = System.currentTimeMillis();
-                if (!runningOnAndroidTV()) channel = NOTIFICATIONCHANNELBGID;
+                if (!runningOnAndroidTV()) channel = NOTIFICATION_CHANNEL_BG_ID;
             } else {
                 mDisplayBytecount = false;
             }
@@ -870,7 +871,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
     private void doSendBroadcast(String state, ConnectionStatus level) {
         Intent vpnstatus = new Intent();
-        vpnstatus.setAction("de.blinkt.openvpn.VPNSTATUS");
+        vpnstatus.setAction("de.blinkt.openvpn.VPN_STATUS");
         vpnstatus.putExtra("status", level.toString());
         vpnstatus.putExtra("detailstatus", state);
         sendBroadcast(vpnstatus, permission.ACCESS_NETWORK_STATE);
@@ -879,8 +880,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     @Override
     public void updateByteCount(long in, long out, long diffIn, long diffOut) {
         if (mDisplayBytecount) {
-            String netstat = String.format(getString(R.string.statuslinebytecount), humanReadableByteCount(in, false, getResources()), humanReadableByteCount(diffIn / OpenVPNManagement.mBytecountInterval, true, getResources()), humanReadableByteCount(out, false, getResources()), humanReadableByteCount(diffOut / OpenVPNManagement.mBytecountInterval, true, getResources()));
-            showNotification(netstat, getString(R.string.appname), NOTIFICATIONCHANNELBGID, mConnecttime, LEVELCONNECTED);
+            String netstat = String.format(getString(R.string.statusline_bytecount), humanReadableByteCount(in, false, getResources()), humanReadableByteCount(diffIn / OpenVPNManagement.mBytecountInterval, true, getResources()), humanReadableByteCount(out, false, getResources()), humanReadableByteCount(diffOut / OpenVPNManagement.mBytecountInterval, true, getResources()));
+            showNotification(netstat, getString(R.string.app_name), NOTIFICATION_CHANNEL_BG_ID, mConnecttime, LEVEL_CONNECTED);
         }
     }
 
@@ -907,13 +908,13 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             String release = Build.VERSION.RELEASE;
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && !release.startsWith("4.4.3") && !release.startsWith("4.4.4") && !release.startsWith("4.4.5") && !release.startsWith("4.4.6"))
                 // There will be probably no 4.4.4 or 4.4.5 version, so don't waste effort to do parsing here
-                return "OPENAFTERCLOSE";
-            else return "OPENBEFORECLOSE";
+                return "OPEN_AFTER_CLOSE";
+            else return "OPEN_BEFORE_CLOSE";
         }
     }
 
     public void requestInputFromUser(int resid, String needed) {
-        VpnStatus.updateStateString("NEED", "need " + needed, resid, LEVELWAITINGFORUSERINPUT);
-        showNotification(getString(resid), getString(resid), NOTIFICATIONCHANNELNEWSTATUSID, 0, LEVELWAITINGFORUSERINPUT);
+        VpnStatus.updateStateString("NEED", "need " + needed, resid, LEVEL_WAITING_FOR_USER_INPUT);
+        showNotification(getString(resid), getString(resid), NOTIFICATION_CHANNEL_NEWSTATUS_ID, 0, LEVEL_WAITING_FOR_USER_INPUT);
     }
 }

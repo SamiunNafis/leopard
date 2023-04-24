@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import de.blinkt.openvpn.core.Preferences;
 public class ExternalAppDatabase {
-    private final String PREFERENCESKEY = "allowedapps";
+    private final String PREFERENCES_KEY = "allowed_apps";
     Context mContext;
     public ExternalAppDatabase(Context c) {
         mContext = c;
@@ -21,7 +21,7 @@ public class ExternalAppDatabase {
     }
     public Set<String> getExtAppList() {
         SharedPreferences prefs = Preferences.getDefaultSharedPreferences(mContext);
-        return prefs.getStringSet(PREFERENCESKEY, new HashSet<String>());
+        return prefs.getStringSet(PREFERENCES_KEY, new HashSet<String>());
     }
     void addApp(String packagename) {
         Set<String> allowedapps = getExtAppList();
@@ -32,7 +32,7 @@ public class ExternalAppDatabase {
         SharedPreferences prefs = Preferences.getDefaultSharedPreferences(mContext);
         Editor prefedit = prefs.edit();
         // Workaround for bug
-        prefedit.putStringSet(PREFERENCESKEY, allowedapps);
+        prefedit.putStringSet(PREFERENCES_KEY, allowedapps);
         int counter = prefs.getInt("counter", 0);
         prefedit.putInt("counter", counter + 1);
         prefedit.apply();
