@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Zerox VPN</string>
+    <string name="app_name" translatable="false">Leopard VPN</string>
     <string name="connect">Connect</string>
     <string name="connected">Disconnect</string>
     <string name="error1">Error</string>

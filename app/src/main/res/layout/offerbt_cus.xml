@@ -1,0 +1,52 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<LinearLayout
+		android:id="@+id/linear1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="5dp"
+		android:layout_marginTop="8dp"
+		android:layout_marginRight="5dp"
+		android:layout_marginBottom="8dp"
+		android:padding="8dp"
+		android:gravity="center_horizontal|center_vertical"
+		android:orientation="horizontal">
+		<ImageView
+			android:id="@+id/imageview1"
+			android:focusable="false"
+			android:layout_width="28dp"
+			android:layout_height="28dp"
+			android:src="@drawable/ic_main_vip_log"
+			android:scaleType="fitCenter" />
+		<TextView
+			android:id="@+id/textview1"
+			android:focusable="false"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="TextView"
+			android:textSize="14sp"
+			android:textColor="#FFFFFF" />
+		<LinearLayout
+			android:id="@+id/linear2"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:padding="8dp"
+			android:orientation="vertical"
+			android:layout_weight="1" />
+		<TextView
+			android:id="@+id/textview2"
+			android:focusable="false"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="$69"
+			android:textSize="14sp"
+			android:textColor="#FFFFFF" />
+	</LinearLayout>
+</LinearLayout>
