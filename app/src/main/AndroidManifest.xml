@@ -20,6 +20,7 @@
 			android:name=".MainActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
 			android:hardwareAccelerated="true"
+			android:exported="true"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="stateHidden">
@@ -32,6 +33,7 @@
 			android:name=".HomeActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
 			android:hardwareAccelerated="true"
+			android:exported="false"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="stateHidden" />
@@ -39,6 +41,7 @@
 			android:name=".ServersActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
 			android:hardwareAccelerated="true"
+			android:exported="false"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="stateHidden" />
@@ -46,13 +49,16 @@
 			android:name=".PurchaseActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
 			android:hardwareAccelerated="true"
+			android:exported="false"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name=".DebugActivity"
+			android:exported="false"
 			android:screenOrientation="portrait" />
 		<activity
 			android:name="com.google.android.gms.ads.AdActivity"
+			android:exported="false"
 			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
 			android:theme="@android:style/Theme.Translucent" />
 		<meta-data
@@ -75,6 +81,7 @@
 			android:required="false" />
 
  <service
+ android:exported="true"
             android:name="de.blinkt.openvpn.core.OpenVPNService"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
@@ -82,6 +89,7 @@
             </intent-filter>
         </service>
         <service
+		android:exported="true"
             android:name="de.blinkt.openvpn.api.ExternalOpenVPNService"
             >
 
@@ -94,6 +102,7 @@
             android:name="de.blinkt.openvpn.LaunchVPN"
             android:excludeFromRecents="true"
             android:label="@string/vpn_launch_title"
+			android:exported="true"
             android:theme="@android:style/Theme.DeviceDefault.Light.Panel"
             >
             <intent-filter>
