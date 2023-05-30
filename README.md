@@ -25,7 +25,7 @@
 
 ## About The Project
 
-![Screen Shot](assets/images/preview.png)
+ <img src="assets/images/preview.png" alt="Leaopard VPN Screenshot" width="400" height="550">
 
 Leopard VPN is a secure and reliable virtual private network (VPN) app that provides users with a secure connection to the internet. It is designed to protect users’ online privacy and security by encrypting their data and hiding their IP address. With Leopard VPN, users can access geo-restricted content, bypass censorship, and browse the web anonymously. It also offers a wide range of features such as unlimited bandwidth, unlimited server switching, and a kill switch to protect users’ data in case of a connection drop. Leopard VPN also offers a no-logs policy, meaning that no data is stored or shared with third parties. It is compatible with all major operating systems and devices, making it easy to use and set up. With Leopard VPN, users can enjoy a secure and private internet experience.
 
@@ -48,6 +48,12 @@ Clone the repo
 
 ```sh
 git clone https://github.com/SamiunNafis/leopard.git
+```
+
+### Build
+
+``` sh
+./gradlew build
 ```
 
 
