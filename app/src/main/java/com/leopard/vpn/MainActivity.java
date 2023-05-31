@@ -38,7 +38,10 @@ import java.util.*;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.*;
-import junit.*;
+import junit.extensions.*;
+import junit.framework.*;
+import junit.runner.*;
+import junit.textui.*;
 import org.json.*;
 
 public class MainActivity extends AppCompatActivity {

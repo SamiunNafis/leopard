@@ -1,24 +1,30 @@
 
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.leopard.vpn">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:installLocation="auto">
+
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 	<application
-		android:allowBackup="true"
+		android:allowBackup="false"
 		android:icon="@drawable/app_icon"
 		android:label="@string/app_name"
+		android:appCategory="productivity"
+		android:hardwareAccelerated="true"
+		android:supportsRtl="true"
 		android:name=".SamiunApplication"
 		android:usesCleartextTraffic="true"
-		android:theme="@style/AppTheme">
+		android:theme="@style/AppTheme"
+		tools:targetApi="o">
 		<activity
 			android:name=".MainActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
-			android:hardwareAccelerated="true"
 			android:exported="true"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait"
@@ -31,7 +37,6 @@
 		<activity
 			android:name=".HomeActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
-			android:hardwareAccelerated="true"
 			android:exported="false"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait"
@@ -39,7 +44,6 @@
 		<activity
 			android:name=".ServersActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
-			android:hardwareAccelerated="true"
 			android:exported="false"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait"
@@ -47,7 +51,6 @@
 		<activity
 			android:name=".PurchaseActivity"
 			android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
-			android:hardwareAccelerated="true"
 			android:exported="false"
 			android:supportsPictureInPicture="true"
 			android:screenOrientation="portrait" />
@@ -63,6 +66,9 @@
 		<meta-data
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version" />
+		<meta-data
+			android:name="com.google.android.gms.ads.APPLICATION_ID"
+			android:value="ca-app-pub-5077097159223655~2311657660" />
 		<provider
 			android:name="com.google.firebase.provider.FirebaseInitProvider"
 			android:authorities="com.leopard.vpn.firebaseinitprovider"
@@ -88,9 +94,8 @@
             </intent-filter>
         </service>
         <service
-		android:exported="true"
             android:name="de.blinkt.openvpn.api.ExternalOpenVPNService"
-            >
+			android:exported="true">
 
             <intent-filter>
                 <action android:name="de.blinkt.openvpn.api.IOpenVPNAPIService"/>
@@ -110,5 +115,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
 	</application>
 </manifest>
