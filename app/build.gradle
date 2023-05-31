@@ -1,6 +1,4 @@
-plugins {
-	id 'com.android.application'
-}
+apply plugin: 'com.android.application'
 
 android {
 	compileSdkVersion 28
@@ -10,6 +8,7 @@ android {
 	defaultConfig {
 		applicationId "com.leopard.vpn"
 		minSdkVersion 21
+		//noinspection ExpiredTargetSdkVersion
 		targetSdkVersion 28
 		versionCode 1
 		versionName "1.0"
@@ -21,6 +20,18 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 	}
+
+   compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+	
+namespace 'com.leopard.vpn'
 }
 
 dependencies {
@@ -32,6 +43,7 @@ dependencies {
 	implementation 'com.github.bumptech.glide:glide:4.12.0'
 	implementation 'com.google.code.gson:gson:2.8.7'
 	implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.airbnb.android:lottie:2.8.0'
+	implementation 'de.hdodenhof:circleimageview:3.1.0'
+	implementation 'com.airbnb.android:lottie:2.8.0'
+	implementation 'com.github.SanojPunchihewa:GlowButton:1.0.1'
 }

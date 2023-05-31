@@ -48,7 +48,10 @@ import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.*;
-import junit.*;
+import junit.extensions.*;
+import junit.framework.*;
+import junit.runner.*;
+import junit.textui.*;
 import org.json.*;
 import com.bumptech.glide.Glide;
 

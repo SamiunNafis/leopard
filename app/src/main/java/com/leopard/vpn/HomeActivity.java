@@ -1,5 +1,7 @@
 package com.leopard.vpn;
 
+import static com.leopard.vpn.SamiunUtil.showMessage;
+
 import android.Manifest;
 import android.animation.*;
 import android.animation.ObjectAnimator;
@@ -178,7 +180,8 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         FirebaseApp.initializeApp(this);
         MobileAds.initialize(this);
 
-        List<String> testDeviceIds = Arrays.asList("874A04C22612BAC3077E65563760EC57");
+    //    List<String> testDeviceIds = Arrays.asList("874A04C22612BAC3077E65563760EC57");
+        List<String> testDeviceIds = Arrays.asList("3EB657CE9608A715A3E48905F593F554");
         MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build());
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
@@ -254,7 +257,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                 @Override
                 public void onClick(View _view) {
                     if (stilConnecting || connected) {
-                        SamiunUtil.showMessage(getApplicationContext(), "Please disconnect first!");
+                        showMessage(getApplicationContext(), "Please disconnect first!");
                     }
                     else {
                         Intent clientStartIntent = new Intent(HomeActivity.this, ServersActivity.class);
@@ -269,7 +272,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                 @Override
                 public void onClick(View _view) {
                     time++;
-                    SamiunUtil.showMessage(getApplicationContext(), "1 hour added");
+                    showMessage(getApplicationContext(), "1 hour added");
                 }
             });
 
@@ -301,11 +304,11 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                     }
                     try{
                         if (!_networkAvailable()) {
-                            SamiunUtil.showMessage(getApplicationContext(), "Please enable internet connection!");
+                            showMessage(getApplicationContext(), "Please enable internet connection!");
                         }
                         else {
                             if (isEmpty) {
-                                SamiunUtil.showMessage(getApplicationContext(), "Please select a server!");
+                                showMessage(getApplicationContext(), "Please select a server!");
                             }
                             else {
                                 Runnable r = new Runnable() {
@@ -343,7 +346,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                             }
                         }
                     }catch(Exception e){
-                        showMessage(e.toString());
+                        showMessage(HomeActivity.this, e.toString());
                     }
                 }
             });
@@ -561,7 +564,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
         try{
             _t.setTypeface(Typeface.createFromAsset(getAssets(), FNAME), 0);
         }catch(Exception e){
-            SamiunUtil.showMessage(getApplicationContext(), "Error!");
+            showMessage(getApplicationContext(), "Error!");
         }
     }
 
@@ -748,7 +751,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                     }
                     @Override
                     public void onProfileLoadFailed(String msg) {
-                        showMessage("Failed");
+                        showMessage(HomeActivity.this, "Failed.");
                         _progressDialog(false);
                     }
                 },_url);
@@ -934,7 +937,7 @@ public class HomeActivity extends AppCompatActivity implements VpnStatus.StateLi
                                     timer.setText(textview8.getText().toString().concat(".".concat(textview1.getText().toString().concat(".".concat(textview7.getText().toString())))));
                                     if ((Double.parseDouble(textview7.getText().toString()) == 5) || (Double.parseDouble(textview7.getText().toString()) > 5)) {
                                         if (textview8.getText().toString().endsWith(String.valueOf((long)(time))) || (Double.parseDouble(textview8.getText().toString()) > time)) {
-                                            SamiunUtil.showMessage(getApplicationContext(), "Time has been outed");
+                                            showMessage(getApplicationContext(), "Time has been outed");
                                             _stopVPN();
                                             stilConnecting = false;
                                             App.isStart = false;
